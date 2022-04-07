@@ -17,15 +17,24 @@ public class Purchase {
             generator = "purchase_sequence"
     )
     private Long id;
+
     private Long value;
     private String type;
     private String subType;
-    private LocalDate dop;
+    private LocalDate dop; // date of purchase
 
     public Purchase() {
     }
 
     public Purchase(Long value, String type, String subType, LocalDate dop) {
+        this.value = value;
+        this.type = type;
+        this.subType = subType;
+        this.dop = dop;
+    }
+
+    public Purchase(Long id, Long value, String type, String subType, LocalDate dop) {
+        this.id = id;
         this.value = value;
         this.type = type;
         this.subType = subType;
@@ -38,6 +47,10 @@ public class Purchase {
 
     public String getType() {
         return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getSubType() {
@@ -54,5 +67,20 @@ public class Purchase {
 
     public void setValue(Long value) {
         this.value = value;
+    }
+
+    public void setDop(LocalDate dop) {
+        this.dop = dop;
+    }
+
+    @Override
+    public String toString() {
+        return "Purchase{" +
+                "id=" + id +
+                ", value=" + value +
+                ", type='" + type + '\'' +
+                ", subType='" + subType + '\'' +
+                ", dop=" + dop +
+                '}';
     }
 }
