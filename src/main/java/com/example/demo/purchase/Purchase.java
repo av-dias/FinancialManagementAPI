@@ -1,5 +1,7 @@
 package com.example.demo.purchase;
 
+import com.example.demo.userclient.UserClient;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -17,6 +19,9 @@ public class Purchase {
             generator = "purchase_sequence"
     )
     private Long id;
+    @ManyToOne
+    @JoinColumn(name="userClientId")
+    private UserClient userClient;
 
     private Long value;
     private String type;
@@ -39,6 +44,10 @@ public class Purchase {
         this.type = type;
         this.subType = subType;
         this.dop = dop;
+    }
+
+    public UserClient getUserClient() {
+        return userClient;
     }
 
     public Long getValue() {

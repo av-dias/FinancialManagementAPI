@@ -1,21 +1,20 @@
-package com.example.demo.user;
+package com.example.demo.userclient;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table
-public class User {
+public class UserClient {
     @Id
     @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
+            name = "userclient_sequence",
+            sequenceName = "userclient_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
+            generator = "userclient_sequence"
     )
 
     private Long id;
@@ -23,23 +22,26 @@ public class User {
     private String email;
     private String password;
     private LocalDateTime doc; //date of creation
-    private LocalDateTime doa; //date of update
+    private LocalDateTime dou; //date of update
 
-    public User(Long id, String name, String email, String password, LocalDateTime doc, LocalDateTime doa) {
+    public UserClient() {
+    }
+
+    public UserClient(Long id, String name, String email, String password, LocalDateTime doc, LocalDateTime doa) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.doc = doc;
-        this.doa = doa;
+        this.dou = doa;
     }
 
-    public User(String name, String email, String password, LocalDateTime doc, LocalDateTime doa) {
+    public UserClient(String name, String email, String password, LocalDateTime doc, LocalDateTime doa) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.doc = doc;
-        this.doa = doa;
+        this.dou = doa;
     }
 
     public Long getId() {
@@ -62,8 +64,8 @@ public class User {
         return doc;
     }
 
-    public LocalDateTime getDoa() {
-        return doa;
+    public LocalDateTime getDou() {
+        return dou;
     }
 
     public void setName(String name) {
@@ -82,8 +84,8 @@ public class User {
         this.doc = doc;
     }
 
-    public void setDoa(LocalDateTime doa) {
-        this.doa = doa;
+    public void setDou(LocalDateTime dou) {
+        this.dou = dou;
     }
 
     @Override
@@ -94,7 +96,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", doc=" + doc +
-                ", doa=" + doa +
+                ", doa=" + dou +
                 '}';
     }
 }

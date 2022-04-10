@@ -1,25 +1,24 @@
 package com.example.demo.purchase;
 
-import com.cedarsoftware.util.io.JsonWriter;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import org.apache.tomcat.util.json.JSONParser;
+import com.example.demo.userclient.UserClient;
+import com.example.demo.userclient.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Component
 public class PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public PurchaseService(PurchaseRepository purchaseRepository){
+    public PurchaseService(PurchaseRepository purchaseRepository, UserRepository userRepository){
         this.purchaseRepository = purchaseRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Purchase> getPurchases()
@@ -28,6 +27,14 @@ public class PurchaseService {
     }
 
     public void addNewPurchase(Purchase purchase) {
+        UserClient userClient = purchase.getUserClient();
+        //CHECK IF USER IS DEFINED
+        if(purchase.getUserClient()==null)
+            throw new IllegalStateException("No user defined.");
+        //CHECK IF USER EXISTS
+        boolean exists = userRepository.existsById(userClient.getId());
+        if(!exists)
+            throw new IllegalStateException("The user defined does not exists.");
         if(purchase.getDop()==null)
             purchase.setDop(LocalDate.now());
         purchaseRepository.save(purchase);

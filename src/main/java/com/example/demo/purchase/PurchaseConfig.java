@@ -11,7 +11,7 @@ import java.util.List;
 @Configuration
 public class PurchaseConfig {
 
-    @Bean
+    /*@Bean
     CommandLineRunner commandLineRunner(PurchaseRepository repository){
         return args -> {
             Purchase smartphone = new  Purchase(
@@ -30,5 +30,5 @@ public class PurchaseConfig {
             );
             repository.saveAll(List.of(smartphone, charger));
         };
-    }
+    }*/
 }
