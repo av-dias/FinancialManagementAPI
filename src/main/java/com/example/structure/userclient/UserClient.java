@@ -1,7 +1,10 @@
-package com.example.demo.userclient;
+package com.example.structure.userclient;
+
+import com.example.structure.purchase.Purchase;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table
@@ -18,6 +21,11 @@ public class UserClient {
     )
 
     private Long id;
+
+    @OneToMany
+    @JoinColumn(name="clientId", referencedColumnName = "id")
+    private Set<Purchase> purchases;
+
     private String name;
     private String email;
     private String password;
@@ -42,6 +50,14 @@ public class UserClient {
         this.password = password;
         this.doc = doc;
         this.dou = doa;
+    }
+
+    public void addPurchase(Purchase purchase){
+        this.purchases.add(purchase);
+    }
+
+    public Set<Purchase> getPurchases() {
+        return purchases;
     }
 
     public Long getId() {

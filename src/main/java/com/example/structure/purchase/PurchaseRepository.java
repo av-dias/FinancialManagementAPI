@@ -1,4 +1,4 @@
-package com.example.demo.purchase;
+package com.example.structure.purchase;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

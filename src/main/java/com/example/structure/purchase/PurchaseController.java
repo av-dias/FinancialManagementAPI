@@ -1,4 +1,4 @@
-package com.example.demo.purchase;
+package com.example.structure.purchase;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
-@RequestMapping(path= "api/v1/purchase")
+@RequestMapping(path= "api/v1/purchase/")
 public class PurchaseController {
 
     private final PurchaseService purchaseService;
@@ -25,9 +25,10 @@ public class PurchaseController {
         return purchaseService.getPurchases();
     }
 
-    @PostMapping
-    public void registerNewPurchase(@RequestBody Purchase purchase){
-        purchaseService.addNewPurchase(purchase);
+    @PostMapping(path = "user/{userId}")
+    public void registerNewPurchase(@RequestBody Purchase purchase,
+                                    @PathVariable("userId") Long userId){
+        purchaseService.addNewPurchase(purchase, userId);
     }
 
     @DeleteMapping(path = "{purchaseId}")

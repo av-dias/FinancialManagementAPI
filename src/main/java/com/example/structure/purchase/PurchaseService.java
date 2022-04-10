@@ -1,24 +1,27 @@
-package com.example.demo.purchase;
+package com.example.structure.purchase;
 
-import com.example.demo.userclient.UserClient;
-import com.example.demo.userclient.UserRepository;
+import com.example.structure.userclient.UserClient;
+import com.example.structure.userclient.UserRepository;
+import com.example.structure.userclient.UserService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public PurchaseService(PurchaseRepository purchaseRepository, UserRepository userRepository){
+    public PurchaseService(PurchaseRepository purchaseRepository, UserService userService){
         this.purchaseRepository = purchaseRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public List<Purchase> getPurchases()
@@ -26,18 +29,22 @@ public class PurchaseService {
         return purchaseRepository.findAll();
     }
 
-    public void addNewPurchase(Purchase purchase) {
-        UserClient userClient = purchase.getUserClient();
+    public void addNewPurchase(Purchase purchase, Long userId) {
         //CHECK IF USER IS DEFINED
-        if(purchase.getUserClient()==null)
+        if(userId==null)
             throw new IllegalStateException("No user defined.");
-        //CHECK IF USER EXISTS
-        boolean exists = userRepository.existsById(userClient.getId());
-        if(!exists)
-            throw new IllegalStateException("The user defined does not exists.");
+        Optional<UserClient> user = userService.findUser(userId);
+        //CHECK IF USER IS EXISTS
+        if(!user.isPresent())
+            throw new IllegalStateException("User does not exist.");
+        //CHECK IF PURCHASE IS DEFINED
+        if(purchase==null)
+            throw new IllegalStateException("No purchase defined.");
+        //CHECK IG DATE OF PURCHASE EXISTS
         if(purchase.getDop()==null)
             purchase.setDop(LocalDate.now());
         purchaseRepository.save(purchase);
+        userService.savePurchaseFromUser(purchase, userId);
     }
 
     public void deletePurchase(Long purchaseId) {

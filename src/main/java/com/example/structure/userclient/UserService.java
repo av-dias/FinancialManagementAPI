@@ -1,11 +1,11 @@
-package com.example.demo.userclient;
+package com.example.structure.userclient;
 
+import com.example.structure.purchase.Purchase;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +21,19 @@ public class UserService {
     }
 
     public List<UserClient> getUserClients() { return userRepository.findAll();}
+
+    public Optional<UserClient> findUser(Long userId)
+    {
+        return userRepository.findUserClientById(userId);
+    }
+
+    @Transactional
+    public void savePurchaseFromUser(Purchase purchase, Long userId){
+        //CHECK IF USER ALREADY EXISTS
+        UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
+        //ADDS PURCHASE
+        user.addPurchase(purchase);
+    }
 
     public void addNewUser(UserClient userClient) {
         //CHECK IF USER ALREADY EXISTS

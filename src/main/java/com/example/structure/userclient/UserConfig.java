@@ -1,4 +1,4 @@
-package com.example.demo.userclient;
+package com.example.structure.userclient;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
