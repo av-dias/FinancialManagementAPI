@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path= "api/v1/user")
 public class UserController {
 

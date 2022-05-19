@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path= "api/v1/purchase/")
 public class PurchaseController {
 
