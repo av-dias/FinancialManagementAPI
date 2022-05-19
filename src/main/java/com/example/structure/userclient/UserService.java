@@ -37,8 +37,8 @@ public class UserService {
 
     public void addNewUser(UserClient userClient) {
         //CHECK IF USER ALREADY EXISTS
-        Optional<UserClient> checkUser = userRepository.findUserClientByEmail(userClient.getEmail());
-        if(checkUser.isPresent()){
+        UserClient checkUser = userRepository.findUserClientByEmail(userClient.getEmail());
+        if(checkUser != null){
             throw new IllegalStateException("Email Taken.");
         }
         //CHECK IF DATE OF CREATION EXISTS

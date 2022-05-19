@@ -29,6 +29,7 @@ public class UserClient {
     private String name;
     private String email;
     private String password;
+    private String role;
     private LocalDateTime doc; //date of creation
     private LocalDateTime dou; //date of update
 
@@ -40,6 +41,7 @@ public class UserClient {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = "user";
         this.doc = doc;
         this.dou = doa;
     }
@@ -66,6 +68,10 @@ public class UserClient {
 
     public String getName() {
         return name;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public String getEmail() {
@@ -111,6 +117,7 @@ public class UserClient {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
                 ", doc=" + doc +
                 ", doa=" + dou +
                 '}';
