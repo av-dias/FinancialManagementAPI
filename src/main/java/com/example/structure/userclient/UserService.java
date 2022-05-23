@@ -27,6 +27,10 @@ public class UserService {
         return userRepository.findUserClientById(userId);
     }
 
+    public UserClient getUser(String username){
+        return userRepository.findUserClientByEmail(username);
+    }
+
     @Transactional
     public void savePurchaseFromUser(Purchase purchase, Long userId){
         //CHECK IF USER ALREADY EXISTS
