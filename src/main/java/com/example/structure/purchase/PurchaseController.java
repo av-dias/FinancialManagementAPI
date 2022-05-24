@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -20,15 +21,16 @@ public class PurchaseController {
         this.purchaseService = purchaseService;
     }
 
-    @GetMapping
-    public List<Purchase> getPurchases()
+    @GetMapping(path = "user/{userId}")
+    public Set<Purchase> getPurchases(@PathVariable("userId") Long userId)
     {
-        return purchaseService.getPurchases();
+        return purchaseService.getPurchases(userId);
     }
 
     @PostMapping(path = "user/{userId}")
     public void registerNewPurchase(@RequestBody Purchase purchase,
                                     @PathVariable("userId") Long userId){
+        System.out.println(purchase);
         purchaseService.addNewPurchase(purchase, userId);
     }
 

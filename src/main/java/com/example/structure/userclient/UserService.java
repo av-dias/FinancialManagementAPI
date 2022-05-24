@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class UserService {
@@ -37,6 +38,13 @@ public class UserService {
         UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
         //ADDS PURCHASE
         user.addPurchase(purchase);
+    }
+
+    public Set<Purchase> getPurchaseFromUser(Long userId){
+        //CHECK IF USER ALREADY EXISTS
+        UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
+        //get PURCHASE
+        return user.getPurchases();
     }
 
     public void addNewUser(UserClient userClient) {

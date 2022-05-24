@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class PurchaseService {
@@ -24,9 +25,9 @@ public class PurchaseService {
         this.userService = userService;
     }
 
-    public List<Purchase> getPurchases()
+    public Set<Purchase> getPurchases(Long userId)
     {
-        return purchaseRepository.findAll();
+        return userService.getPurchaseFromUser(userId);
     }
 
     public void addNewPurchase(Purchase purchase, Long userId) {
