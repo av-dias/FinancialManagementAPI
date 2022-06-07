@@ -30,7 +30,6 @@ public class PurchaseController {
     @PostMapping(path = "user/{userId}")
     public void registerNewPurchase(@RequestBody Purchase purchase,
                                     @PathVariable("userId") Long userId){
-        System.out.println(purchase);
         purchaseService.addNewPurchase(purchase, userId);
     }
 

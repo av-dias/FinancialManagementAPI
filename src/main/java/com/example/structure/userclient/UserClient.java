@@ -4,6 +4,10 @@ import com.example.structure.purchase.Purchase;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.Set;
 
 @Entity
@@ -23,7 +27,7 @@ public class UserClient {
     private Long id;
 
     @OneToMany
-    @JoinColumn(name="clientId", referencedColumnName = "id")
+    @JoinColumn(name = "clientId", referencedColumnName = "id")
     private Set<Purchase> purchases;
 
     private String name;
@@ -54,12 +58,37 @@ public class UserClient {
         this.dou = doa;
     }
 
-    public void addPurchase(Purchase purchase){
+    public void addPurchase(Purchase purchase) {
         this.purchases.add(purchase);
     }
 
     public Set<Purchase> getPurchases() {
         return purchases;
+    }
+
+    public int getTotalPurchases() {
+        Iterator iter = this.purchases.iterator();
+        int total = 0;
+        while (iter.hasNext()) {
+            Purchase element = (Purchase) iter.next();
+            total += element.getValue();
+        }
+        return total;
+    }
+
+    public int getTotalMonthPurchases() {
+        Iterator iter = this.purchases.iterator();
+        int total = 0;
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH)+1;
+
+        while (iter.hasNext()) {
+            Purchase element = (Purchase) iter.next();
+            int elemMonth = element.getDop().getMonthValue();
+            if (elemMonth == month)
+                total += element.getValue();
+        }
+        return total;
     }
 
     public Long getId() {

@@ -44,6 +44,7 @@ public class PurchaseService {
         //CHECK IG DATE OF PURCHASE EXISTS
         if(purchase.getDop()==null)
             purchase.setDop(LocalDate.now());
+
         purchaseRepository.save(purchase);
         userService.savePurchaseFromUser(purchase, userId);
     }

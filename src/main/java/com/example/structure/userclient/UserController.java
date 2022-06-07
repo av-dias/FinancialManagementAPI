@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.Role;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,35 +30,37 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @CrossOrigin
 @Slf4j
-@RequestMapping(path= "api/v1/user")
+@RequestMapping(path = "api/v1/user")
 public class UserController {
 
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService){
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
-    public List<UserClient> getUserClients() { return userService.getUserClients();}
+    public List<UserClient> getUserClients() {
+        return userService.getUserClients();
+    }
 
     @PostMapping
-    public void registerNewUserClient(@RequestBody UserClient userClient){
+    public void registerNewUserClient(@RequestBody UserClient userClient) {
         userService.addNewUser(userClient);
     }
 
-    @DeleteMapping(path= "{userId}")
-    public void deleteUserClient(@PathVariable("userId") Long userId){
+    @DeleteMapping(path = "{userId}")
+    public void deleteUserClient(@PathVariable("userId") Long userId) {
         userService.deleteUser(userId);
     }
 
-    @PutMapping(path= "{userId}")
+    @PutMapping(path = "{userId}")
     public void updateUser(
             @PathVariable("userId") Long userId,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
-            @RequestParam(required = false) String password){
+            @RequestParam(required = false) String password) {
         userService.updateUser(userId, name, email, password, LocalDateTime.now());
     }
 
@@ -65,8 +68,8 @@ public class UserController {
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
-            try{
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            try {
                 // remove "Bearer " word from header to be used
                 String refresh_token = authorizationHeader.substring("Bearer ".length());
                 Algorithm algorithm = Algorithm.HMAC256("c973e0dc33416b380c1dccfab5b4ae4bab11946498aa97779072a88acdb2f9bb".getBytes());
@@ -87,7 +90,7 @@ public class UserController {
                 tokens.put("refresh_token", refresh_token);
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
-            }catch (Exception exception){
+            } catch (Exception exception) {
                 response.setHeader("error", exception.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 //response.sendError(FORBIDDEN.value());
@@ -97,9 +100,14 @@ public class UserController {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
-        }
-        else {
+        } else {
             throw new RuntimeException("Refresh token is missing");
         }
+    }
+
+    @GetMapping("{userId}/purchase/statistics")
+    public String getUserStatistics(@PathVariable("userId") Long userId) {
+        JSONObject stats = userService.getPurchaseStatsFromUser(userId);
+        return stats.toString();
     }
 }

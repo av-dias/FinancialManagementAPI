@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class UserConfig {
 
-    @Bean
+    /*@Bean
     CommandLineRunner commandLineRunnerUser(UserRepository repository){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -27,5 +27,5 @@ public class UserConfig {
             );
             repository.save(userClient1);
         };
-    }
+    }*/
 }
