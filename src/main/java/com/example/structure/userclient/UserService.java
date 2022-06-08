@@ -1,5 +1,6 @@
 package com.example.structure.userclient;
 
+import com.example.structure.income.Income;
 import com.example.structure.purchase.Purchase;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.apache.catalina.User;
@@ -43,11 +44,25 @@ public class UserService {
         user.addPurchase(purchase);
     }
 
+    @Transactional
+    public void saveIncomeFromUser(Income income, Long userId) {
+        //CHECK IF USER ALREADY EXISTS
+        UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
+        //ADDS Income
+        user.addIncome(income);
+    }
     public Set<Purchase> getPurchaseFromUser(Long userId) {
         //CHECK IF USER ALREADY EXISTS
         UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
         //get PURCHASE
         return user.getPurchases();
+    }
+
+    public Set<Income> getIncomeFromUser(Long userId) {
+        //CHECK IF USER ALREADY EXISTS
+        UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
+        //get Income
+        return user.getIncome();
     }
 
     public JSONObject getPurchaseStatsFromUser(Long userId) {

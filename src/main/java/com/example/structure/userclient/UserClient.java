@@ -1,5 +1,6 @@
 package com.example.structure.userclient;
 
+import com.example.structure.income.Income;
 import com.example.structure.purchase.Purchase;
 
 import javax.persistence.*;
@@ -25,10 +26,14 @@ public class UserClient {
     )
 
     private Long id;
-
+    //spring.jpa.hibernate.ddl-auto=create-drop
     @OneToMany
     @JoinColumn(name = "clientId", referencedColumnName = "id")
     private Set<Purchase> purchases;
+
+    @OneToMany
+    @JoinColumn(name = "clientId", referencedColumnName = "id")
+    private Set<Income> income;
 
     private String name;
     private String email;
@@ -62,9 +67,18 @@ public class UserClient {
         this.purchases.add(purchase);
     }
 
+    public void addIncome(Income income) {
+        this.income.add(income);
+    }
+
     public Set<Purchase> getPurchases() {
         return purchases;
     }
+
+    public Set<Income> getIncome() {
+        return income;
+    }
+
 
     public int getTotalPurchases() {
         Iterator iter = this.purchases.iterator();
@@ -80,7 +94,7 @@ public class UserClient {
         Iterator iter = this.purchases.iterator();
         int total = 0;
         Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH)+1;
+        int month = calendar.get(Calendar.MONTH) + 1;
 
         while (iter.hasNext()) {
             Purchase element = (Purchase) iter.next();

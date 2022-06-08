@@ -1,15 +1,12 @@
 package com.example.structure.purchase;
 
 import com.example.structure.userclient.UserClient;
-import com.example.structure.userclient.UserRepository;
 import com.example.structure.userclient.UserService;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
