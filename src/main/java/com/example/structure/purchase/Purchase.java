@@ -1,7 +1,5 @@
 package com.example.structure.purchase;
 
-import com.example.structure.userclient.UserClient;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -20,7 +18,8 @@ public class Purchase {
     )
     private Long id;
 
-    private Long value;
+    private Float value;
+    private String name;
     private String type;
     private String subType;
     private LocalDate dop; // date of purchase
@@ -28,46 +27,46 @@ public class Purchase {
     public Purchase() {
     }
 
-    public Purchase(Long value, String type, String subType, LocalDate dop) {
+    public Purchase(Float value, String name, String type, LocalDate dop) {
         this.value = value;
+        this.name = name;
         this.type = type;
-        this.subType = subType;
         this.dop = dop;
     }
 
-    public Purchase(Long id, Long value, String type, String subType, LocalDate dop) {
+    public Purchase(Long id, Float value, String name, String type, LocalDate dop) {
         this.id = id;
         this.value = value;
+        this.name = name;
         this.type = type;
-        this.subType = subType;
         this.dop = dop;
     }
 
-    public Long getValue() {
+    public Float getValue() {
         return value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getSubType() {
-        return subType;
-    }
-
     public LocalDate getDop() {
         return dop;
     }
 
-    public void setSubType(String subType) {
-        this.subType = subType;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public void setValue(Long value) {
+    public void setValue(Float value) {
         this.value = value;
     }
 
@@ -75,13 +74,21 @@ public class Purchase {
         this.dop = dop;
     }
 
+    public String getSubType() {
+        return subType;
+    }
+
+    public void setSubType(String subType) {
+        this.subType = subType;
+    }
+
     @Override
     public String toString() {
         return "Purchase{" +
                 "id=" + id +
                 ", value=" + value +
-                ", type='" + type + '\'' +
-                ", subType='" + subType + '\'' +
+                ", type='" + name + '\'' +
+                ", subType='" + type + '\'' +
                 ", dop=" + dop +
                 '}';
     }

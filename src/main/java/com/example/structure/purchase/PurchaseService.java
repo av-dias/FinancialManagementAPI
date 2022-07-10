@@ -55,14 +55,14 @@ public class PurchaseService {
     }
 
     @Transactional
-    public void updatePurchase(Long purchaseId, String type, String subType, Long value, LocalDate dop){
+    public void updatePurchase(Long purchaseId, String type, String subType, Float value, LocalDate dop){
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(() -> new IllegalStateException("purchase with id " + purchaseId + " does not exists"));
         if(type !=null && type.length()>0){
-            purchase.setType(type);
+            purchase.setName(type);
         }
 
         if(subType !=null && subType.length()>0){
-            purchase.setSubType(subType);
+            purchase.setType(subType);
         }
 
         if(value != null){

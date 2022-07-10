@@ -27,6 +27,7 @@ public class IncomeController {
     @PostMapping(path = "user/{userId}")
     public void registerNewIncome(@RequestBody Income income,
                                   @PathVariable("userId") Long userId) {
+        System.out.println(income);
         incomeService.addNewIncome(income, userId);
     }
 
@@ -40,7 +41,7 @@ public class IncomeController {
             @PathVariable("incomeId") Long incomeId,
             @RequestParam(required = false) String type,
             @RequestParam(required = false) String subType,
-            @RequestParam(required = false) Long value,
+            @RequestParam(required = false) Float value,
             @RequestParam(required = false) String doi) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/d");
         incomeService.updateIncome(incomeId, type, subType, value, LocalDate.parse(doi, formatter));

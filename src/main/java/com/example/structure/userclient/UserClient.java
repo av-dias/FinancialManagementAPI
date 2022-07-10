@@ -2,6 +2,7 @@ package com.example.structure.userclient;
 
 import com.example.structure.income.Income;
 import com.example.structure.purchase.Purchase;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,7 +27,7 @@ public class UserClient {
     )
 
     private Long id;
-    //spring.jpa.hibernate.ddl-auto=create-drop
+    //spring.jpa.hibernate.ddl-auto=create
     @OneToMany
     @JoinColumn(name = "clientId", referencedColumnName = "id")
     private Set<Purchase> purchases;
@@ -80,9 +81,9 @@ public class UserClient {
     }
 
 
-    public int getTotalPurchases() {
+    public float getTotalPurchases() {
         Iterator iter = this.purchases.iterator();
-        int total = 0;
+        float total = 0;
         while (iter.hasNext()) {
             Purchase element = (Purchase) iter.next();
             total += element.getValue();
@@ -90,11 +91,52 @@ public class UserClient {
         return total;
     }
 
-    public int getTotalMonthPurchases() {
-        Iterator iter = this.purchases.iterator();
-        int total = 0;
+    public float getTotalSavings() {
+        Iterator iterIncome = this.income.iterator();
+
+        float totalPurchases = this.getTotalPurchases();
+        float total = 0;
+        int totalIncome = 0;
+
+        while (iterIncome.hasNext()) {
+            Income element = (Income) iterIncome.next();
+            totalIncome += element.getValue();
+        }
+
+        return totalIncome - totalPurchases;
+    }
+
+    public float getMonthSavings() {
+        Iterator iterIncome = this.income.iterator();
+
+        float monthPurchases = this.getTotalMonthPurchases(0);
+        float monthIncome = 0;
+
+        // The income of Type==Salary from January will be used on February
+        // The paycheck comes on the end of the month
         Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH) + 1;
+        int month;
+
+        while (iterIncome.hasNext()) {
+            Income element = (Income) iterIncome.next();
+            int elemMonth = element.getDoi().getMonthValue();
+
+            if (element.getType().toLowerCase().equals("salary"))
+                month = calendar.get(Calendar.MONTH);
+            else
+                month = calendar.get(Calendar.MONTH) + 1;
+
+            if (elemMonth == month)
+                monthIncome += element.getValue();
+        }
+        return monthIncome - monthPurchases;
+    }
+
+    public float getTotalMonthPurchases(int month_backtrack) {
+        Iterator iter = this.purchases.iterator();
+        float total = 0;
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH) + 1 - month_backtrack;
 
         while (iter.hasNext()) {
             Purchase element = (Purchase) iter.next();
@@ -103,6 +145,38 @@ public class UserClient {
                 total += element.getValue();
         }
         return total;
+    }
+
+    public JSONObject getMonthsPurchases(){
+        JSONObject purchaseByMonth = new JSONObject();
+        int total_backtrack=11; // goes from 11 to 0 with are 12 months iterations
+        while(total_backtrack>=0){
+            float purchase = getTotalMonthPurchases(total_backtrack);
+            purchaseByMonth.accumulate(Integer.toString(total_backtrack), purchase);
+        }
+        System.out.println(purchaseByMonth);
+        return purchaseByMonth;
+    }
+
+    public JSONObject getMonthPurchasesbyType() {
+        Iterator iter = this.purchases.iterator();
+        JSONObject purchaseByType = new JSONObject();
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH) + 1;
+
+        while (iter.hasNext()) {
+            Purchase element = (Purchase) iter.next();
+            int elemMonth = element.getDop().getMonthValue();
+            String type = element.getType();
+            Float value = element.getValue();
+            if (elemMonth == month) {
+                if(purchaseByType.has(type))
+                    purchaseByType.put(type, (float)purchaseByType.get(type)+value);
+                else
+                    purchaseByType.put(type, value);
+            }
+        }
+        return purchaseByType;
     }
 
     public Long getId() {

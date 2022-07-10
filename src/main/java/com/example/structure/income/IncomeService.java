@@ -39,6 +39,7 @@ public class IncomeService {
         if (income == null)
             throw new IllegalStateException("No purchase defined.");
         //CHECK IG DATE OF PURCHASE EXISTS
+        System.out.println(income);
         if (income.getDoi() == null)
             income.setDoi(LocalDate.now());
 
@@ -55,7 +56,7 @@ public class IncomeService {
     }
 
     @Transactional
-    public void updateIncome(Long incomeId, String type, String subType, Long value, LocalDate doi) {
+    public void updateIncome(Long incomeId, String type, String subType, Float value, LocalDate doi) {
         Income income = incomeRepository.findById(incomeId).orElseThrow(() -> new IllegalStateException("purchase with id " + incomeId + " does not exists"));
         if (type != null && type.length() > 0) {
             income.setType(type);

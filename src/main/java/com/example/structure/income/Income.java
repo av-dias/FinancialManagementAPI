@@ -19,7 +19,7 @@ public class Income {
 
     private Long id;
 
-    private Long value;
+    private Float value;
 
     private String type;
 
@@ -31,7 +31,7 @@ public class Income {
 
     }
 
-    public Income(Long id, Long value, String type, String subType, LocalDate doi) {
+    public Income(Long id, Float value, String type, String subType, LocalDate doi) {
         this.id = id;
         this.value = value;
         this.type = type;
@@ -43,7 +43,7 @@ public class Income {
         this.id = id;
     }
 
-    public void setValue(Long value) {
+    public void setValue(Float value) {
         this.value = value;
     }
 
@@ -63,7 +63,7 @@ public class Income {
         return id;
     }
 
-    public Long getValue() {
+    public Float getValue() {
         return value;
     }
 

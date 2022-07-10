@@ -51,6 +51,7 @@ public class UserService {
         //ADDS Income
         user.addIncome(income);
     }
+
     public Set<Purchase> getPurchaseFromUser(Long userId) {
         //CHECK IF USER ALREADY EXISTS
         UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
@@ -69,11 +70,22 @@ public class UserService {
         //CHECK IF USER ALREADY EXISTS
         UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
 
-        int totalSpendings = user.getTotalPurchases();
-        int monthSpendings = user.getTotalMonthPurchases();
+        float totalSpendings = user.getTotalPurchases();
+        float totalSavings = user.getTotalSavings();
+        float monthSpendings = user.getTotalMonthPurchases(0);
+        float monthSavings = user.getMonthSavings();
+        JSONObject purchasesByType = user.getMonthPurchasesbyType();
+        //JSONObject purchasesByMonth = user.getMonthsPurchases();
+
+        //System.out.println(purchasesByMonth);
+
         JSONObject stats = new JSONObject();
         stats.put("total_spendings", totalSpendings);
+        stats.put("total_savings", totalSavings);
         stats.put("month_spendings", monthSpendings);
+        stats.put("month_savings", monthSavings);
+        stats.put("purchases_by_type", purchasesByType);
+        //stats.put("purchases_by_month", purchasesByMonth);
 
         return stats;
     }

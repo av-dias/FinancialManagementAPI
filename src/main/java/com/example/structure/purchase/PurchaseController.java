@@ -40,7 +40,7 @@ public class PurchaseController {
             @PathVariable("purchaseId") Long purchaseId,
             @RequestParam(required = false) String type,
             @RequestParam(required = false) String subType,
-            @RequestParam(required = false) Long value,
+            @RequestParam(required = false) Float value,
             @RequestParam(required = false) String dop) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/d");
         purchaseService.updatePurchase(purchaseId, type, subType, value, LocalDate.parse(dop, formatter));
