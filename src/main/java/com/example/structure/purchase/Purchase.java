@@ -1,7 +1,11 @@
 package com.example.structure.purchase;
 
+import com.example.structure.documentation.Documentation;
+import com.example.structure.split.Split;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table
@@ -17,12 +21,19 @@ public class Purchase {
             generator = "purchase_sequence"
     )
     private Long id;
-
     private Float value;
     private String name;
     private String type;
     private String subType;
     private LocalDate dop; // date of purchase
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "splitId", referencedColumnName = "id")
+    private Split split;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "documentationId", referencedColumnName = "id")
+    private Documentation documentation;
 
     public Purchase() {
     }
@@ -40,6 +51,10 @@ public class Purchase {
         this.name = name;
         this.type = type;
         this.dop = dop;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Float getValue() {
