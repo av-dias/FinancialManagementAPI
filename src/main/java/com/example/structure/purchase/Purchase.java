@@ -2,6 +2,9 @@ package com.example.structure.purchase;
 
 import com.example.structure.documentation.Documentation;
 import com.example.structure.split.Split;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -28,6 +31,7 @@ public class Purchase {
     private LocalDate dop; // date of purchase
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonManagedReference
     @JoinColumn(name = "splitId", referencedColumnName = "id")
     private Split split;
 
@@ -95,6 +99,22 @@ public class Purchase {
 
     public void setSubType(String subType) {
         this.subType = subType;
+    }
+
+    public Split getSplit() {
+        return split;
+    }
+
+    public void setSplit(Split split) {
+        this.split = split;
+    }
+
+    public Documentation getDocumentation() {
+        return documentation;
+    }
+
+    public void setDocumentation(Documentation documentation) {
+        this.documentation = documentation;
     }
 
     @Override

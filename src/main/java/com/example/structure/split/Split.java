@@ -1,6 +1,9 @@
 package com.example.structure.split;
 
 import com.example.structure.userclient.UserClient;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 
@@ -26,6 +29,25 @@ public class Split {
 
     public Split(int weight) {
         this.weight = weight;
+    }
+
+    public Split() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public UserClient getUserClient() {
+        return userClient;
+    }
+
+    public void setUserClient(UserClient userClient) {
+        this.userClient = userClient;
     }
 
     public int getWeight() {

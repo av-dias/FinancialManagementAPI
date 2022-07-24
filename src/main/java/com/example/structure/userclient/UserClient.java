@@ -2,6 +2,9 @@ package com.example.structure.userclient;
 
 import com.example.structure.income.Income;
 import com.example.structure.purchase.Purchase;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.json.JSONObject;
 
 import javax.persistence.*;
@@ -29,6 +32,7 @@ public class UserClient {
     private Long id;
     //spring.jpa.hibernate.ddl-auto=create
     @OneToMany
+    @JsonBackReference
     @JoinColumn(name = "clientId", referencedColumnName = "id")
     private Set<Purchase> purchases;
 
