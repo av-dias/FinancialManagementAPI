@@ -17,29 +17,32 @@ public class PurchaseService {
     private final UserService userService;
 
     @Autowired
-    public PurchaseService(PurchaseRepository purchaseRepository, UserService userService){
+    public PurchaseService(PurchaseRepository purchaseRepository, UserService userService) {
         this.purchaseRepository = purchaseRepository;
         this.userService = userService;
     }
 
-    public Set<Purchase> getPurchases(Long userId)
-    {
+    public Set<Purchase> getPurchases(Long userId) {
         return userService.getPurchaseFromUser(userId);
+    }
+
+    public Optional<Purchase> findPurchase(Long purchaseId) {
+        return purchaseRepository.findById(purchaseId);
     }
 
     public void addNewPurchase(Purchase purchase, Long userId) {
         //CHECK IF USER IS DEFINED
-        if(userId==null)
+        if (userId == null)
             throw new IllegalStateException("No user defined.");
         Optional<UserClient> user = userService.findUser(userId);
         //CHECK IF USER IS EXISTS
-        if(!user.isPresent())
+        if (!user.isPresent())
             throw new IllegalStateException("User does not exist.");
         //CHECK IF PURCHASE IS DEFINED
-        if(purchase==null)
+        if (purchase == null)
             throw new IllegalStateException("No purchase defined.");
         //CHECK IG DATE OF PURCHASE EXISTS
-        if(purchase.getDop()==null)
+        if (purchase.getDop() == null)
             purchase.setDop(LocalDate.now());
 
         purchaseRepository.save(purchase);
@@ -48,29 +51,33 @@ public class PurchaseService {
 
     public void deletePurchase(Long purchaseId) {
         boolean exists = purchaseRepository.existsById(purchaseId);
-        if(!exists){
+        if (!exists) {
             throw new IllegalStateException("purchase with id " + purchaseId + " does not exists");
         }
         purchaseRepository.deleteById(purchaseId);
     }
 
     @Transactional
-    public void updatePurchase(Long purchaseId, String type, String subType, Float value, LocalDate dop){
+    public void updatePurchase(Long purchaseId, String type, String subType, Float value, LocalDate dop) {
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(() -> new IllegalStateException("purchase with id " + purchaseId + " does not exists"));
-        if(type !=null && type.length()>0){
+        if (type != null && type.length() > 0) {
             purchase.setName(type);
         }
 
-        if(subType !=null && subType.length()>0){
+        if (subType != null && subType.length() > 0) {
             purchase.setType(subType);
         }
 
-        if(value != null){
+        if (value != null) {
             purchase.setValue(value);
         }
 
-        if(dop != null){
+        if (dop != null) {
             purchase.setDop(dop);
         }
+    }
+
+    public void savePurchase(Purchase purchase) {
+        purchaseRepository.save(purchase);
     }
 }

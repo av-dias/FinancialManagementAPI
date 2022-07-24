@@ -21,10 +21,7 @@ public class Split {
             generator = "split_sequence"
     )
     private int id;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userId", referencedColumnName = "id")
-    private UserClient userClient;
+    private Long user_id;
     private int weight;
 
     public Split(int weight) {
@@ -42,19 +39,19 @@ public class Split {
         this.id = id;
     }
 
-    public UserClient getUserClient() {
-        return userClient;
-    }
-
-    public void setUserClient(UserClient userClient) {
-        this.userClient = userClient;
-    }
-
     public int getWeight() {
         return weight;
     }
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    public Long getUserClientId() {
+        return user_id;
+    }
+
+    public void setUserClientId(Long userClientId) {
+        this.user_id = userClientId;
     }
 }

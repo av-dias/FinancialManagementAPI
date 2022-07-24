@@ -84,6 +84,9 @@ public class UserClient {
         return income;
     }
 
+    public boolean hasPurchase(Purchase purchase){
+        return this.getPurchases().contains(purchase);
+    }
 
     public float getTotalPurchases() {
         Iterator iter = this.purchases.iterator();
