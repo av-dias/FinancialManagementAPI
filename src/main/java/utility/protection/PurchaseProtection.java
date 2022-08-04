@@ -2,10 +2,12 @@ package utility.protection;
 
 import com.example.structure.purchase.Purchase;
 import com.example.structure.purchase.PurchaseService;
+import com.example.structure.split.Split;
 import com.example.structure.userclient.UserClient;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class PurchaseProtection {
@@ -26,10 +28,22 @@ public class PurchaseProtection {
         return purchase;
     }
 
-    public void updatePurchase(Purchase purchase){
+    public void updatePurchase(Purchase purchase) {
         Optional<Purchase> _purchase = this.hasPurchase(purchase.getId());
-        if(_purchase.isPresent()){
+        if (_purchase.isPresent()) {
             purchaseService.savePurchase(purchase);
         }
+    }
+
+    public Optional<Purchase> getPurchaseFromSplit(Split split) {
+        return purchaseService.getPurchaseFromSplit(split);
+    }
+
+    public Optional<Set<Purchase>> getPurchaseBySplits(Set<Split> split) {
+        return purchaseService.findPurchasesFromSplits(split);
+    }
+
+    public String getUserbyPurchase(Purchase p){
+        return purchaseService.getUserByPurchase(p);
     }
 }

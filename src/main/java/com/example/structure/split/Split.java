@@ -28,6 +28,11 @@ public class Split {
         this.weight = weight;
     }
 
+    public Split(int weight, Long user_id) {
+        this.weight = weight;
+        this.user_id = user_id;
+    }
+
     public Split() {
     }
 

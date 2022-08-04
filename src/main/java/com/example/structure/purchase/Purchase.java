@@ -31,7 +31,6 @@ public class Purchase {
     private LocalDate dop; // date of purchase
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JsonManagedReference
     @JoinColumn(name = "splitId", referencedColumnName = "id")
     private Split split;
 

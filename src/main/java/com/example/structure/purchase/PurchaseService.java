@@ -1,5 +1,6 @@
 package com.example.structure.purchase;
 
+import com.example.structure.split.Split;
 import com.example.structure.userclient.UserClient;
 import com.example.structure.userclient.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,10 @@ public class PurchaseService {
 
     public Optional<Purchase> findPurchase(Long purchaseId) {
         return purchaseRepository.findById(purchaseId);
+    }
+
+    public Optional<Set<Purchase>> findPurchasesFromSplits(Set<Split> s){
+        return purchaseRepository.findPurchaseBySplits(s);
     }
 
     public void addNewPurchase(Purchase purchase, Long userId) {
@@ -79,5 +84,14 @@ public class PurchaseService {
 
     public void savePurchase(Purchase purchase) {
         purchaseRepository.save(purchase);
+    }
+
+    public Optional<Purchase> getPurchaseFromSplit(Split split){
+        Optional<Purchase> _purchase = purchaseRepository.findPurchaseBySplit(split);
+        return _purchase;
+    }
+
+    public String getUserByPurchase(Purchase p){
+        return purchaseRepository.findUserbyPurchaseId(p.getId());
     }
 }

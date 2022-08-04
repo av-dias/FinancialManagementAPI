@@ -76,10 +76,12 @@ public class UserController {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refresh_token);
                 String username = decodedJWT.getSubject();
-                UserClient user = userService.getUser(username);
+                Optional<UserClient> _user = userService.getUser(username);
+                UserClient user = _user.get();
 
                 String access_token = JWT.create().
                         withSubject(user.getEmail()).
+                        withSubject(user.getName()).
                         withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 10000))
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("roles", user.getRole())

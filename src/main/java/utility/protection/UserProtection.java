@@ -25,4 +25,15 @@ public class UserProtection {
             throw new IllegalStateException("User does not exist.");
         return user;
     }
+
+    public Optional<UserClient> hasUser(String userEmail){
+        //CHECK IF USER IS DEFINED
+        if(userEmail==null)
+            throw new IllegalStateException("No user defined.");
+        Optional<UserClient> user = userService.getUser(userEmail);
+        //CHECK IF USER IS EXISTS
+        if(!user.isPresent())
+            throw new IllegalStateException("User does not exist.");
+        return user;
+    }
 }

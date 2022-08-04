@@ -32,7 +32,7 @@ public class UserService {
         return userRepository.findUserClientById(userId);
     }
 
-    public UserClient getUser(String username) {
+    public Optional<UserClient> getUser(String username) {
         return userRepository.findUserClientByEmail(username);
     }
 
@@ -92,8 +92,8 @@ public class UserService {
 
     public void addNewUser(UserClient userClient) {
         //CHECK IF USER ALREADY EXISTS
-        UserClient checkUser = userRepository.findUserClientByEmail(userClient.getEmail());
-        if (checkUser != null) {
+        Optional<UserClient> checkUser = userRepository.findUserClientByEmail(userClient.getEmail());
+        if (checkUser.isPresent() && checkUser.get() != null) {
             throw new IllegalStateException("Email Taken.");
         }
         //CHECK IF DATE OF CREATION EXISTS

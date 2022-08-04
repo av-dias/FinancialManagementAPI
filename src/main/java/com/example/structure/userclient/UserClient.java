@@ -2,18 +2,14 @@ package com.example.structure.userclient;
 
 import com.example.structure.income.Income;
 import com.example.structure.purchase.Purchase;
+import com.example.structure.split.Split;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Entity
 @Table
@@ -32,7 +28,6 @@ public class UserClient {
     private Long id;
     //spring.jpa.hibernate.ddl-auto=create
     @OneToMany
-    @JsonBackReference
     @JoinColumn(name = "clientId", referencedColumnName = "id")
     private Set<Purchase> purchases;
 
@@ -84,8 +79,57 @@ public class UserClient {
         return income;
     }
 
-    public boolean hasPurchase(Purchase purchase){
+    public boolean hasPurchase(Purchase purchase) {
         return this.getPurchases().contains(purchase);
+    }
+
+    public Set<Purchase> getPurchasesSplit() {
+        Set<Purchase> purchasesWithSplit = new HashSet<Purchase>();
+
+        purchases.forEach(p -> {
+            if (p.getSplit() != null)
+                purchasesWithSplit.add(p);
+        });
+
+        return purchasesWithSplit;
+    }
+
+    public Set<Purchase> getPurchasesFromSplit(Set<Split> mySplits) {
+        Set<Purchase> purchasesFromSplit = new HashSet<Purchase>();
+
+        purchases.forEach(p -> {
+            if (mySplits.contains(p.getSplit()))
+                purchasesFromSplit.add(p);
+        });
+
+        return purchasesFromSplit;
+    }
+
+    public JSONObject getSplitInformation() {
+        //Get set of purchases that the user owns
+        Set<Purchase> purchasesWithSplit = getPurchasesSplit();
+        JSONObject purchaseBySplitUser = new JSONObject();
+        Map<String, JSONObject> mapUsers = new HashMap<>();
+        purchasesWithSplit.forEach(pwS -> {
+            Long sUser = pwS.getSplit().getUserClientId();
+            String splitUser = sUser.toString();
+            if (mapUsers.containsKey(splitUser)) {
+                JSONObject json = mapUsers.get(splitUser);
+                float total = (float) json.get("total") + pwS.getValue();
+                float iShare = (float) json.get("iShare") + (pwS.getValue() * (100 - pwS.getSplit().getWeight()) / 100);
+                float yShare = (float) json.get("yShare") + (pwS.getValue() * (pwS.getSplit().getWeight()) / 100);
+
+                mapUsers.put(splitUser, new JSONObject().put("total", total).put("iShare", iShare).put("yShare", yShare));
+            } else {
+                float total = (float) pwS.getValue();
+                float iShare = (float) total * (100 - pwS.getSplit().getWeight()) / 100;
+                float yShare = (float) total * (pwS.getSplit().getWeight()) / 100;
+                mapUsers.put(splitUser, new JSONObject().put("total", total).put("iShare", iShare).put("yShare", yShare));
+            }
+        });
+
+        purchaseBySplitUser.put("Self", mapUsers.entrySet()); // returns a Map.Entry<K,V>[]
+        return purchaseBySplitUser;
     }
 
     public float getTotalPurchases() {
@@ -154,10 +198,10 @@ public class UserClient {
         return total;
     }
 
-    public JSONObject getMonthsPurchases(){
+    public JSONObject getMonthsPurchases() {
         JSONObject purchaseByMonth = new JSONObject();
-        int total_backtrack=11; // goes from 11 to 0 with are 12 months iterations
-        while(total_backtrack>=0){
+        int total_backtrack = 11; // goes from 11 to 0 with are 12 months iterations
+        while (total_backtrack >= 0) {
             float purchase = getTotalMonthPurchases(total_backtrack);
             purchaseByMonth.accumulate(Integer.toString(total_backtrack), purchase);
         }
@@ -177,8 +221,8 @@ public class UserClient {
             String type = element.getType();
             Float value = element.getValue();
             if (elemMonth == month) {
-                if(purchaseByType.has(type))
-                    purchaseByType.put(type, (float)purchaseByType.get(type)+value);
+                if (purchaseByType.has(type))
+                    purchaseByType.put(type, (float) purchaseByType.get(type) + value);
                 else
                     purchaseByType.put(type, value);
             }

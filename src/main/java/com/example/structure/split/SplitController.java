@@ -2,6 +2,7 @@ package com.example.structure.split;
 
 import com.example.structure.purchase.Purchase;
 import com.example.structure.purchase.PurchaseService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,14 +27,23 @@ public class SplitController {
 
     //Checks my own splits
     @GetMapping(path = "user/{userId}")
-    public Set<Split> getSplit(@PathVariable("userId") Long userId) {
-        return splitService.getSplit(userId);
+    public Set<Purchase> getSplit(@PathVariable("userId") Long userId) {
+        return splitService.getPurchasesFromSplit(userId);
     }
 
     //Create new split purchase
     @PostMapping(path = "user/{userId}/purchase/{purchaseId}")
-    public void saveNewSplit(@PathVariable("userId") Long userId, @PathVariable("purchaseId") Long purchaseId, @RequestBody Split split) {
-        splitService.saveNewSplit(userId, purchaseId, split);
+    public void saveNewSplit(@PathVariable("userId") Long userId, @PathVariable("purchaseId") Long purchaseId, @RequestBody String data) {
+        JSONObject json = new JSONObject(data);
+        int weight = Integer.parseInt((String) json.get("weight"));
+        String userEmail = (String) json.get("userEmail");
+        splitService.saveNewSplit(userId, purchaseId, weight, userEmail);
     }
 
+    //Information about my split status
+    @GetMapping(path = "users/user/{userId}/stats")
+    public String getSplitStats(@PathVariable("userId") Long userId){
+        JSONObject json = splitService.getSplitStats(userId);
+        return json.toString();
+    }
 }
