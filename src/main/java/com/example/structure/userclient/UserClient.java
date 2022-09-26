@@ -160,7 +160,7 @@ public class UserClient {
     public float getMonthSavings(int month_backtrack) {
         Iterator iterIncome = this.income.iterator();
 
-        float monthPurchases = this.getTotalMonthPurchases(month_backtrack);
+        float monthTotalSpendings = this.getTotalMonthPurchases(month_backtrack);
         float monthIncome = 0;
 
         // The income of Type==Salary from January will be used on February
@@ -169,18 +169,19 @@ public class UserClient {
         int month;
 
         while (iterIncome.hasNext()) {
-            Income element = (Income) iterIncome.next();
-            int elemMonth = element.getDoi().getMonthValue();
+            Income incomeElement = (Income) iterIncome.next();
+            // Get month from the income
+            int elemMonth = incomeElement.getDoi().getMonthValue();
 
-            if (element.getType().toLowerCase().equals("salary"))
-                month = calendar.get(Calendar.MONTH);
+            if (incomeElement.getType().toLowerCase().equals("salary"))
+                month = month_backtrack - 1;
             else
-                month = calendar.get(Calendar.MONTH) + 1;
+                month = month_backtrack;
 
             if (elemMonth == month)
-                monthIncome += element.getValue();
+                monthIncome += incomeElement.getValue();
         }
-        return monthIncome - monthPurchases;
+        return monthIncome - monthTotalSpendings;
     }
 
     public float getTotalMonthPurchases(int month_backtrack) {
@@ -208,6 +209,18 @@ public class UserClient {
             total_backtrack--;
         }
         return purchaseByMonth;
+    }
+
+    // Gets savings by each month
+    public JSONObject getMonthsSavings(){
+        JSONObject savingsByMonth = new JSONObject();
+        int total_backtrack = 11; // goes from 11 to 0 which are 12 months iterations
+        while (total_backtrack >= 0) {
+            float savings = getMonthSavings(total_backtrack);
+            savingsByMonth.accumulate(Integer.toString(total_backtrack), savings);
+            total_backtrack--;
+        }
+        return savingsByMonth;
     }
 
     public JSONObject getMonthPurchasesbyType() {

@@ -79,6 +79,7 @@ public class UserService {
         float monthSavings = user.getMonthSavings(todayMonth);
         JSONObject purchasesByType = user.getMonthPurchasesbyType();
         JSONObject purchasesByMonth = user.getMonthsPurchases();
+        JSONObject savingsByMonth = user.getMonthsSavings();
 
         JSONObject stats = new JSONObject();
         stats.put("total_spendings", totalSpendings);
@@ -87,6 +88,7 @@ public class UserService {
         stats.put("month_savings", monthSavings);
         stats.put("purchases_by_type", purchasesByType);
         stats.put("purchases_by_month", purchasesByMonth);
+        stats.put("savings_by_month", savingsByMonth);
 
         return stats;
     }
