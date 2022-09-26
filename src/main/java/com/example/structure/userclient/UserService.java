@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -69,15 +70,15 @@ public class UserService {
     public JSONObject getPurchaseStatsFromUser(Long userId) {
         //CHECK IF USER ALREADY EXISTS
         UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
+        Calendar calendar = Calendar.getInstance();
+        int todayMonth = calendar.get(Calendar.MONTH) + 1;
 
         float totalSpendings = user.getTotalPurchases();
         float totalSavings = user.getTotalSavings();
-        float monthSpendings = user.getTotalMonthPurchases(0);
-        float monthSavings = user.getMonthSavings();
+        float monthSpendings = user.getTotalMonthPurchases(todayMonth);
+        float monthSavings = user.getMonthSavings(todayMonth);
         JSONObject purchasesByType = user.getMonthPurchasesbyType();
-        //JSONObject purchasesByMonth = user.getMonthsPurchases();
-
-        //System.out.println(purchasesByMonth);
+        JSONObject purchasesByMonth = user.getMonthsPurchases();
 
         JSONObject stats = new JSONObject();
         stats.put("total_spendings", totalSpendings);
@@ -85,7 +86,7 @@ public class UserService {
         stats.put("month_spendings", monthSpendings);
         stats.put("month_savings", monthSavings);
         stats.put("purchases_by_type", purchasesByType);
-        //stats.put("purchases_by_month", purchasesByMonth);
+        stats.put("purchases_by_month", purchasesByMonth);
 
         return stats;
     }

@@ -157,10 +157,10 @@ public class UserClient {
         return totalIncome - totalPurchases;
     }
 
-    public float getMonthSavings() {
+    public float getMonthSavings(int month_backtrack) {
         Iterator iterIncome = this.income.iterator();
 
-        float monthPurchases = this.getTotalMonthPurchases(0);
+        float monthPurchases = this.getTotalMonthPurchases(month_backtrack);
         float monthIncome = 0;
 
         // The income of Type==Salary from January will be used on February
@@ -187,7 +187,7 @@ public class UserClient {
         Iterator iter = this.purchases.iterator();
         float total = 0;
         Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH) + 1 - month_backtrack;
+        int month = month_backtrack;
 
         while (iter.hasNext()) {
             Purchase element = (Purchase) iter.next();
@@ -205,8 +205,8 @@ public class UserClient {
         while (total_backtrack >= 0) {
             float purchase = getTotalMonthPurchases(total_backtrack);
             purchaseByMonth.accumulate(Integer.toString(total_backtrack), purchase);
+            total_backtrack--;
         }
-        System.out.println(purchaseByMonth);
         return purchaseByMonth;
     }
 
