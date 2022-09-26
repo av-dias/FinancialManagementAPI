@@ -198,9 +198,10 @@ public class UserClient {
         return total;
     }
 
+    // Gets purchases spendings by each month
     public JSONObject getMonthsPurchases() {
         JSONObject purchaseByMonth = new JSONObject();
-        int total_backtrack = 11; // goes from 11 to 0 with are 12 months iterations
+        int total_backtrack = 11; // goes from 11 to 0 which are 12 months iterations
         while (total_backtrack >= 0) {
             float purchase = getTotalMonthPurchases(total_backtrack);
             purchaseByMonth.accumulate(Integer.toString(total_backtrack), purchase);
