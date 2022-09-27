@@ -223,11 +223,11 @@ public class UserClient {
         return savingsByMonth;
     }
 
-    public JSONObject getMonthPurchasesbyType() {
+    public JSONObject getMonthPurchasesbyType(int month_backtrack) {
         Iterator iter = this.purchases.iterator();
         JSONObject purchaseByType = new JSONObject();
         Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH) + 1;
+        int month = month_backtrack;
 
         while (iter.hasNext()) {
             Purchase element = (Purchase) iter.next();
@@ -242,6 +242,47 @@ public class UserClient {
             }
         }
         return purchaseByType;
+    }
+
+    private int monthBacktrack(int month){
+        if(month==1)
+            return 12;
+        else return month-1;
+    }
+    public JSONObject getAveragePurchasesbyType() {
+        JSONObject avPurchasesByType = new JSONObject();
+        JSONObject monthCountByType = new JSONObject();
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int countBacktrack = 12;
+        while(countBacktrack>0)
+        {
+            JSONObject tmp = getMonthPurchasesbyType(month);
+
+            tmp.keySet().forEach(type -> {
+                float value = (float) tmp.get(type);
+                if(!avPurchasesByType.has(type)){
+                    avPurchasesByType.put(type, tmp.get(type));
+                    monthCountByType.put(type, 1);
+                }
+                else{
+                    Integer count = (Integer) monthCountByType.get(type);
+
+                    avPurchasesByType.put(type, (float) tmp.get(type) + value);
+                    monthCountByType.put(type, count + 1);
+                }
+            });
+
+            month = monthBacktrack(month);
+            countBacktrack--;
+        }
+
+        avPurchasesByType.keySet().forEach(type -> {
+            Float value = (Float) avPurchasesByType.get(type);
+            avPurchasesByType.put(type, value/(Integer)monthCountByType.get(type));
+        });
+
+        return avPurchasesByType;
     }
 
     public Long getId() {
