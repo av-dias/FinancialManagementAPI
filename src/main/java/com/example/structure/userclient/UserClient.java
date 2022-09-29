@@ -3,13 +3,12 @@ package com.example.structure.userclient;
 import com.example.structure.income.Income;
 import com.example.structure.purchase.Purchase;
 import com.example.structure.split.Split;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Entity
 @Table
@@ -277,9 +276,16 @@ public class UserClient {
             countBacktrack--;
         }
 
+        AtomicInteger max_count= new AtomicInteger();
+        monthCountByType.keySet().forEach(type -> {
+            if((Integer)monthCountByType.get(type)> max_count.get())
+                max_count.set((Integer) monthCountByType.get(type));
+        });
+
         avPurchasesByType.keySet().forEach(type -> {
             Float value = (Float) avPurchasesByType.get(type);
-            avPurchasesByType.put(type, value/(Integer)monthCountByType.get(type));
+
+            avPurchasesByType.put(type, value/ max_count.get());
         });
 
         return avPurchasesByType;
