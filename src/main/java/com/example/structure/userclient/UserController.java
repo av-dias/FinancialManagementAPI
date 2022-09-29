@@ -107,9 +107,9 @@ public class UserController {
         }
     }
 
-    @GetMapping("{userId}/purchase/statistics")
-    public String getUserStatistics(@PathVariable("userId") Long userId) {
-        JSONObject stats = userService.getPurchaseStatsFromUser(userId);
+    @GetMapping("{userId}/purchase/statistics/month/{month}")
+    public String getUserStatistics(@PathVariable("userId") Long userId, @PathVariable("month") int month) {
+        JSONObject stats = userService.getPurchaseStatsFromUser(userId, month);
         return stats.toString();
     }
 }

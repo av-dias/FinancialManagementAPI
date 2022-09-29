@@ -67,11 +67,11 @@ public class UserService {
         return user.getIncome();
     }
 
-    public JSONObject getPurchaseStatsFromUser(Long userId) {
+    public JSONObject getPurchaseStatsFromUser(Long userId, int todayMonth) {
         //CHECK IF USER ALREADY EXISTS
         UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
         Calendar calendar = Calendar.getInstance();
-        int todayMonth = calendar.get(Calendar.MONTH) + 1;
+        //int todayMonth = calendar.get(Calendar.MONTH) + 1;
 
         float totalSpendings = user.getTotalPurchases();
         float totalSavings = user.getTotalSavings();
