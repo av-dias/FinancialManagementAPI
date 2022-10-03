@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Entity
 @Table
@@ -120,9 +121,9 @@ public class UserClient {
 
                 mapUsers.put(splitUser, new JSONObject().put("total", total).put("iShare", iShare).put("yShare", yShare));
             } else {
-                float total = (float) pwS.getValue();
-                float iShare = (float) total * (100 - pwS.getSplit().getWeight()) / 100;
-                float yShare = (float) total * (pwS.getSplit().getWeight()) / 100;
+                float total =  pwS.getValue();
+                float iShare = total * (100 - pwS.getSplit().getWeight()) / 100;
+                float yShare =  total * (pwS.getSplit().getWeight()) / 100;
                 mapUsers.put(splitUser, new JSONObject().put("total", total).put("iShare", iShare).put("yShare", yShare));
             }
         });
@@ -145,7 +146,6 @@ public class UserClient {
         Iterator iterIncome = this.income.iterator();
 
         float totalPurchases = this.getTotalPurchases();
-        float total = 0;
         int totalIncome = 0;
 
         while (iterIncome.hasNext()) {
@@ -296,16 +296,16 @@ public class UserClient {
             JSONObject tmp = getMonthPurchasesbyType(month, pFromSplit);
 
             tmp.keySet().forEach(type -> {
-                float value = (float) tmp.get(type);
                 if(!avPurchasesByType.has(type)){
                     avPurchasesByType.put(type, tmp.get(type));
-                    monthCountByType.put(type, 1);
+                    monthCountByType.put(type, (float) 1);
                 }
                 else{
-                    Integer count = (Integer) monthCountByType.get(type);
+                    float count = (float) monthCountByType.get(type);
+                    float value = (float) avPurchasesByType.get(type);
 
                     avPurchasesByType.put(type, (float) tmp.get(type) + value);
-                    monthCountByType.put(type, count + 1);
+                    monthCountByType.put(type, count + (float) 1);
                 }
             });
 
@@ -313,14 +313,14 @@ public class UserClient {
             countBacktrack--;
         }
 
-        AtomicInteger max_count= new AtomicInteger();
+        AtomicReference<Float> max_count= new AtomicReference<>((float) 0);
         monthCountByType.keySet().forEach(type -> {
-            if((Integer)monthCountByType.get(type)> max_count.get())
-                max_count.set((Integer) monthCountByType.get(type));
+            if((float)monthCountByType.get(type)> max_count.get())
+                max_count.set((float) monthCountByType.get(type));
         });
 
         avPurchasesByType.keySet().forEach(type -> {
-            Float value = (Float) avPurchasesByType.get(type);
+            float value = (float) avPurchasesByType.get(type);
 
             avPurchasesByType.put(type, value/ max_count.get());
         });
@@ -338,16 +338,16 @@ public class UserClient {
             JSONObject tmp = getMonthPurchasesbyType(month);
 
             tmp.keySet().forEach(type -> {
-                float value = (float) tmp.get(type);
                 if(!avPurchasesByType.has(type)){
                     avPurchasesByType.put(type, tmp.get(type));
-                    monthCountByType.put(type, 1);
+                    monthCountByType.put(type, (float)1);
                 }
                 else{
-                    Integer count = (Integer) monthCountByType.get(type);
+                    float count = (float) monthCountByType.get(type);
+                    float value = (float) avPurchasesByType.get(type);
 
                     avPurchasesByType.put(type, (float) tmp.get(type) + value);
-                    monthCountByType.put(type, count + 1);
+                    monthCountByType.put(type, count + (float) 1);
                 }
             });
 
@@ -355,14 +355,14 @@ public class UserClient {
             countBacktrack--;
         }
 
-        AtomicInteger max_count= new AtomicInteger();
+        AtomicReference<Float> max_count= new AtomicReference<>((float) 0);
         monthCountByType.keySet().forEach(type -> {
-            if((Integer)monthCountByType.get(type)> max_count.get())
-                max_count.set((Integer) monthCountByType.get(type));
+            if((float)monthCountByType.get(type)> max_count.get())
+                max_count.set((float) monthCountByType.get(type));
         });
 
         avPurchasesByType.keySet().forEach(type -> {
-            Float value = (Float) avPurchasesByType.get(type);
+            float value = (Float) avPurchasesByType.get(type);
 
             avPurchasesByType.put(type, value/ max_count.get());
         });
