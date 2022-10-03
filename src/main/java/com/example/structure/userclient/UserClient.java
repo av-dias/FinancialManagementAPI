@@ -284,6 +284,49 @@ public class UserClient {
             return 12;
         else return month-1;
     }
+
+    public JSONObject getAveragePurchasesbyType(Set<Purchase> pFromSplit) {
+        JSONObject avPurchasesByType = new JSONObject();
+        JSONObject monthCountByType = new JSONObject();
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int countBacktrack = 12;
+        while(countBacktrack>0)
+        {
+            JSONObject tmp = getMonthPurchasesbyType(month, pFromSplit);
+
+            tmp.keySet().forEach(type -> {
+                float value = (float) tmp.get(type);
+                if(!avPurchasesByType.has(type)){
+                    avPurchasesByType.put(type, tmp.get(type));
+                    monthCountByType.put(type, 1);
+                }
+                else{
+                    Integer count = (Integer) monthCountByType.get(type);
+
+                    avPurchasesByType.put(type, (float) tmp.get(type) + value);
+                    monthCountByType.put(type, count + 1);
+                }
+            });
+
+            month = monthBacktrack(month);
+            countBacktrack--;
+        }
+
+        AtomicInteger max_count= new AtomicInteger();
+        monthCountByType.keySet().forEach(type -> {
+            if((Integer)monthCountByType.get(type)> max_count.get())
+                max_count.set((Integer) monthCountByType.get(type));
+        });
+
+        avPurchasesByType.keySet().forEach(type -> {
+            Float value = (Float) avPurchasesByType.get(type);
+
+            avPurchasesByType.put(type, value/ max_count.get());
+        });
+
+        return avPurchasesByType;
+    }
     public JSONObject getAveragePurchasesbyType() {
         JSONObject avPurchasesByType = new JSONObject();
         JSONObject monthCountByType = new JSONObject();

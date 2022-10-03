@@ -99,7 +99,9 @@ public class UserService {
         //CHECK IF USER ALREADY EXISTS
         UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
 
-        JSONObject purchaseByType = user.getMonthPurchasesbyType(todayMonth, p);
+        JSONObject purchaseByType = new JSONObject();
+        purchaseByType.put("current", user.getMonthPurchasesbyType(todayMonth, p));
+        purchaseByType.put("average",user.getAveragePurchasesbyType(p));
 
         return purchaseByType;
     }
