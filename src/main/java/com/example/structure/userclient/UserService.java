@@ -95,6 +95,15 @@ public class UserService {
         return stats;
     }
 
+    public JSONObject purchasesByType(Long userId,  int todayMonth, Set<Purchase> p){
+        //CHECK IF USER ALREADY EXISTS
+        UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
+
+        JSONObject purchaseByType = user.getMonthPurchasesbyType(todayMonth, p);
+
+        return purchaseByType;
+    }
+
     public void addNewUser(UserClient userClient) {
         //CHECK IF USER ALREADY EXISTS
         Optional<UserClient> checkUser = userRepository.findUserClientByEmail(userClient.getEmail());

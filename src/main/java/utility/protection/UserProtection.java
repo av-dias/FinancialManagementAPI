@@ -1,10 +1,13 @@
 package utility.protection;
 
+import com.example.structure.purchase.Purchase;
 import com.example.structure.userclient.UserClient;
 import com.example.structure.userclient.UserService;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class UserProtection {
@@ -35,5 +38,11 @@ public class UserProtection {
         if(!user.isPresent())
             throw new IllegalStateException("User does not exist.");
         return user;
+    }
+
+    // Get purchases and splits by type and per month
+    public JSONObject purchasesByType(Long userId, int month_backtrack, Set<Purchase> p) {
+        JSONObject purchaseByType = userService.purchasesByType(userId, month_backtrack, p);
+        return purchaseByType;
     }
 }

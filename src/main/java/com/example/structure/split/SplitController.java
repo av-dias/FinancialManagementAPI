@@ -31,6 +31,13 @@ public class SplitController {
         return splitService.getPurchasesFromSplit(userId);
     }
 
+
+    @GetMapping(path = "purchases/user/{userId}/month/{month}")
+    public String getSplit(@PathVariable("userId") Long userId, @PathVariable("month") int month ) {
+        JSONObject stats = splitService.getPurchasesSplitbyType(userId, month);
+        return stats.toString();
+    }
+
     //Create new split purchase
     @PostMapping(path = "user/{userId}/purchase/{purchaseId}")
     public void saveNewSplit(@PathVariable("userId") Long userId, @PathVariable("purchaseId") Long purchaseId, @RequestBody String data) {

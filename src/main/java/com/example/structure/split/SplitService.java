@@ -68,6 +68,15 @@ public class SplitService {
         return listOfPurchases;
     }
 
+    // Get purchases and splits by type and per month
+    public JSONObject getPurchasesSplitbyType(Long userId, int month_backtrack){
+        Optional<UserClient> _userClient = userProtection.hasUser(userId);
+
+        Set<Purchase> p = getPurchasesFromSplit(userId);
+        JSONObject purchaseByType = userProtection.purchasesByType(userId, month_backtrack, p);
+        return purchaseByType;
+    }
+
     public void saveNewSplit(Long userId, Long purchaseId, int weight, String userEmail) {
         Optional<UserClient> _userClient = userProtection.hasUser(userId);
         Optional<Purchase> _purchase = purchaseProtection.hasPurchase(purchaseId);

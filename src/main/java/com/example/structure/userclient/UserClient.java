@@ -222,8 +222,44 @@ public class UserClient {
         return savingsByMonth;
     }
 
+    public JSONObject getMonthPurchasesbyType(int month_backtrack, Set<Purchase> pFromSplit) {
+        Iterator iter = this.purchases.iterator();
+        Iterator iterSplit = pFromSplit.iterator();
+
+        JSONObject purchaseByType = new JSONObject();
+        int month = month_backtrack;
+
+        while (iter.hasNext()) {
+            Purchase element = (Purchase) iter.next();
+            int elemMonth = element.getDop().getMonthValue();
+            String type = element.getType();
+            Float value = element.getValue();
+            if (elemMonth == month) {
+                if (purchaseByType.has(type))
+                    purchaseByType.put(type, (float) purchaseByType.get(type) + value);
+                else
+                    purchaseByType.put(type, value);
+            }
+        }
+        while (iterSplit.hasNext()) {
+            Purchase element = (Purchase) iterSplit.next();
+            int elemMonth = element.getDop().getMonthValue();
+            String type = element.getType();
+            Float value = element.getValue();
+            if (elemMonth == month) {
+                if (purchaseByType.has(type))
+                    purchaseByType.put(type, (float) purchaseByType.get(type) + value);
+                else
+                    purchaseByType.put(type, value);
+            }
+        }
+
+        return purchaseByType;
+    }
+
     public JSONObject getMonthPurchasesbyType(int month_backtrack) {
         Iterator iter = this.purchases.iterator();
+
         JSONObject purchaseByType = new JSONObject();
         Calendar calendar = Calendar.getInstance();
         int month = month_backtrack;
