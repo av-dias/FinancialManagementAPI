@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping(path = "api/v1/income/")
 public class IncomeController {
 

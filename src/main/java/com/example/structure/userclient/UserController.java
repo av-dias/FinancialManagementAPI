@@ -28,7 +28,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @Slf4j
 @RequestMapping(path = "api/v1/user")
 public class UserController {

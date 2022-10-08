@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping(path = "api/v1/split/")
 public class SplitController {
     private final SplitService splitService;
