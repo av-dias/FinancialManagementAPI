@@ -3,11 +3,13 @@ package com.example.structure.purchase;
 import com.example.structure.split.Split;
 import com.example.structure.userclient.UserClient;
 import com.example.structure.userclient.UserService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.Set;
 
@@ -63,14 +65,24 @@ public class PurchaseService {
     }
 
     @Transactional
-    public void updatePurchase(Long purchaseId, String type, String subType, Float value, LocalDate dop) {
+    public void updatePurchase(Long purchaseId, Purchase newPurchase) {
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(() -> new IllegalStateException("purchase with id " + purchaseId + " does not exists"));
+        String name = newPurchase.getName();
+        String type = newPurchase.getType();
+        String subType = newPurchase.getSubType();
+        Float value = newPurchase.getValue();
+        LocalDate dop = newPurchase.getDop();
+
+        if (name != null && name.length() > 0) {
+            purchase.setName(name);
+        }
+
         if (type != null && type.length() > 0) {
-            purchase.setName(type);
+            purchase.setType(type);
         }
 
         if (subType != null && subType.length() > 0) {
-            purchase.setType(subType);
+            purchase.setSubType(subType);
         }
 
         if (value != null) {
