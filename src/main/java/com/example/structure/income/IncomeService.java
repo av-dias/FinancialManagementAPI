@@ -56,7 +56,12 @@ public class IncomeService {
     }
 
     @Transactional
-    public void updateIncome(Long incomeId, String type, String subType, Float value, LocalDate doi) {
+    public void updateIncome(Long incomeId, Income newIncome) {
+        String type = newIncome.getType();
+        String subType = newIncome.getSubType();
+        Float value = newIncome.getValue();
+        LocalDate doi = newIncome.getDoi();
+
         Income income = incomeRepository.findById(incomeId).orElseThrow(() -> new IllegalStateException("purchase with id " + incomeId + " does not exists"));
         if (type != null && type.length() > 0) {
             income.setType(type);

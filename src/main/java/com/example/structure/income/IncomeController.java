@@ -39,12 +39,8 @@ public class IncomeController {
     @PutMapping(path = "{incomeId}")
     public void updatePurchase(
             @PathVariable("incomeId") Long incomeId,
-            @RequestParam(required = false) String type,
-            @RequestParam(required = false) String subType,
-            @RequestParam(required = false) Float value,
-            @RequestParam(required = false) String doi) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/d");
-        incomeService.updateIncome(incomeId, type, subType, value, LocalDate.parse(doi, formatter));
+            @RequestBody Income income) {
+        incomeService.updateIncome(incomeId, income);
     }
 
     ;
