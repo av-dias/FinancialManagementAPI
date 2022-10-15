@@ -14,7 +14,9 @@ import org.springframework.stereotype.Component;
 import utility.protection.UserProtection;
 import utility.protection.PurchaseProtection;
 
+import javax.transaction.Transactional;
 import java.lang.reflect.Array;
+import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -144,5 +146,20 @@ public class SplitService {
             return stats;
         }
         return null;
+    }
+
+    @Transactional
+    public void updateSplit(Long splitId, Split newSplit) {
+        Split split = splitRepository.findById(splitId).orElseThrow(() -> new IllegalStateException("split with id " + splitId + " does not exists"));
+        Long userClientId = newSplit.getUserClientId();
+        int weight = newSplit.getWeight();
+
+        if (userClientId != null && userClientId > 0) {
+            split.setUserClientId(userClientId);
+        }
+
+        if (weight >= 0 && weight <=100) {
+            split.setWeight(weight);
+        }
     }
 }

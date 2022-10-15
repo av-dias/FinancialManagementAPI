@@ -42,6 +42,4 @@ public class IncomeController {
             @RequestBody Income income) {
         incomeService.updateIncome(incomeId, income);
     }
-
-    ;
 }

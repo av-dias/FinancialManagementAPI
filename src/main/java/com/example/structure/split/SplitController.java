@@ -1,5 +1,6 @@
 package com.example.structure.split;
 
+import com.example.structure.income.Income;
 import com.example.structure.purchase.Purchase;
 import com.example.structure.purchase.PurchaseService;
 import org.json.JSONObject;
@@ -52,5 +53,13 @@ public class SplitController {
     public String getSplitStats(@PathVariable("userId") Long userId){
         JSONObject json = splitService.getSplitStats(userId);
         return json.toString();
+    }
+
+    //Update split
+    @PutMapping(path = "{splitId}")
+    public void updatePurchase(
+            @PathVariable("splitId") Long incomeId,
+            @RequestBody Split split) {
+        splitService.updateSplit(incomeId, split);
     }
 }
