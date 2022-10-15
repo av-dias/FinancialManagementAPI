@@ -58,8 +58,8 @@ public class SplitController {
     //Update split
     @PutMapping(path = "{splitId}")
     public void updatePurchase(
-            @PathVariable("splitId") Long incomeId,
+            @PathVariable("splitId") Long splitId,
             @RequestBody Split split) {
-        splitService.updateSplit(incomeId, split);
+        splitService.updateSplit(splitId, split);
     }
 }

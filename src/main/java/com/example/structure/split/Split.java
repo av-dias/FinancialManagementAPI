@@ -20,7 +20,7 @@ public class Split {
             strategy = GenerationType.SEQUENCE,
             generator = "split_sequence"
     )
-    private int id;
+    private Long id;
     private Long user_id;
     private int weight;
 
@@ -36,11 +36,11 @@ public class Split {
     public Split() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
