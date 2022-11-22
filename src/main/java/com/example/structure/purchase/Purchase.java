@@ -2,13 +2,9 @@ package com.example.structure.purchase;
 
 import com.example.structure.documentation.Documentation;
 import com.example.structure.split.Split;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
 @Table

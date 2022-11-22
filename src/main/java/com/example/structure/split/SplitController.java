@@ -1,8 +1,6 @@
 package com.example.structure.split;
 
-import com.example.structure.income.Income;
 import com.example.structure.purchase.Purchase;
-import com.example.structure.purchase.PurchaseService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

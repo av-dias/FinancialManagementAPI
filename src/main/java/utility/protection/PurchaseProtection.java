@@ -3,7 +3,6 @@ package utility.protection;
 import com.example.structure.purchase.Purchase;
 import com.example.structure.purchase.PurchaseService;
 import com.example.structure.split.Split;
-import com.example.structure.userclient.UserClient;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

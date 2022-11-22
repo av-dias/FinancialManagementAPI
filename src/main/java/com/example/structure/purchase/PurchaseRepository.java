@@ -1,7 +1,6 @@
 package com.example.structure.purchase;
 
 import com.example.structure.split.Split;
-import com.example.structure.userclient.UserClient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -4,19 +4,14 @@ import com.example.structure.purchase.Purchase;
 import com.example.structure.purchase.PurchaseService;
 import com.example.structure.userclient.UserClient;
 import com.example.structure.userclient.UserService;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.apache.catalina.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import utility.protection.UserProtection;
 import utility.protection.PurchaseProtection;
 
 import javax.transaction.Transactional;
-import java.lang.reflect.Array;
-import java.time.LocalDate;
 import java.util.*;
 
 @Component

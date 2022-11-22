@@ -3,12 +3,12 @@ package com.example.structure.userclient;
 import com.example.structure.income.Income;
 import com.example.structure.purchase.Purchase;
 import com.example.structure.split.Split;
+import com.example.structure.transactions.Transactions;
 import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Entity
@@ -34,6 +34,14 @@ public class UserClient {
     @OneToMany
     @JoinColumn(name = "clientId", referencedColumnName = "id")
     private Set<Income> income;
+
+    @OneToMany
+    @JoinColumn(name = "user_origin_id", referencedColumnName = "id")
+    private Set<Transactions> transactionsSent;
+
+    @OneToMany
+    @JoinColumn(name = "user_destination_id", referencedColumnName = "id")
+    private Set<Transactions> transactionsReceived;
 
     private String name;
     private String email;
