@@ -5,7 +5,6 @@ import com.example.structure.userclient.UserClient;
 import com.example.structure.userclient.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Optional;

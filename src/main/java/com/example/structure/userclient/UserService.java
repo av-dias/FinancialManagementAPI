@@ -2,6 +2,7 @@ package com.example.structure.userclient;
 
 import com.example.structure.income.Income;
 import com.example.structure.purchase.Purchase;
+import com.example.structure.transactions.Transactions;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.apache.catalina.User;
 import org.json.JSONObject;
@@ -51,6 +52,14 @@ public class UserService {
         UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
         //ADDS Income
         user.addIncome(income);
+    }
+
+    @Transactional
+    public void saveTransactionFromUser(Transactions transactions, Long userId){
+        //CHECK IF USER ALREADY EXISTS
+        UserClient user = this.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
+        //ADDS Income
+        user.addTransactions(transactions);
     }
 
     public Set<Purchase> getPurchaseFromUser(Long userId) {

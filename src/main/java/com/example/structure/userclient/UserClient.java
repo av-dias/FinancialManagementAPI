@@ -79,6 +79,10 @@ public class UserClient {
         this.income.add(income);
     }
 
+    public void addTransactions(Transactions transactions) {
+        this.transactionsSent.add(transactions);
+    }
+
     public Set<Purchase> getPurchases() {
         return purchases;
     }

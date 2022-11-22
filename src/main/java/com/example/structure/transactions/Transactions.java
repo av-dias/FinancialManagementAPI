@@ -8,13 +8,13 @@ import java.time.LocalDate;
 public class Transactions {
     @Id
     @SequenceGenerator(
-            name = "transactions_sequence",
-            sequenceName = "transactions_sequence",
+            name = "transactions_id_seq",
+            sequenceName = "transactions_id_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "transactions_sequence"
+            generator = "transactions_id_seq"
     )
     private Long id;
 
@@ -29,8 +29,7 @@ public class Transactions {
     public Transactions(){
     }
 
-    public Transactions(Long id, Long user_destination_id, Long user_origin_id, Float amount, LocalDate dot, String description) {
-        this.id = id;
+    public Transactions(Long user_destination_id, Long user_origin_id, Float amount, LocalDate dot, String description) {
         this.user_destination_id = user_destination_id;
         this.user_origin_id = user_origin_id;
         this.amount = amount;
@@ -38,7 +37,8 @@ public class Transactions {
         this.description = description;
     }
 
-    public Transactions(Long user_destination_id, Long user_origin_id, Float amount, LocalDate dot, String description) {
+    public Transactions(Long id, Long user_destination_id, Long user_origin_id, Float amount, LocalDate dot, String description) {
+        this.id = id;
         this.user_destination_id = user_destination_id;
         this.user_origin_id = user_origin_id;
         this.amount = amount;

@@ -23,4 +23,11 @@ public class TransactionsController {
     public Set<Transactions> getUserClients(@PathVariable("userId") Long userId) {
         return transactionsService.getTransactionsSent(userId);
     }
+
+    @PostMapping(path = "user/{userId}")
+    public void registerNewTransaction(@RequestBody Transactions transactions,
+                                       @RequestParam String destination_email,
+                                       @PathVariable("userId") Long userId) {
+        transactionsService.addNewTransactions(userId, transactions, destination_email);
+    }
 }
