@@ -50,6 +50,7 @@ public class UserClient {
     private LocalDateTime doc; //date of creation
     private LocalDateTime dou; //date of update
 
+    private static final int backtrack = 12;
     public UserClient() {
     }
 
@@ -213,7 +214,7 @@ public class UserClient {
     // Gets purchases spendings by each month
     public JSONObject getMonthsPurchases() {
         JSONObject purchaseByMonth = new JSONObject();
-        int total_backtrack = 11; // goes from 11 to 0 which are 12 months iterations
+        int total_backtrack = backtrack; // goes from 11 to 0 which are 12 months iterations
         while (total_backtrack >= 0) {
             float purchase = getTotalMonthPurchases(total_backtrack);
             purchaseByMonth.accumulate(Integer.toString(total_backtrack), purchase);
@@ -225,7 +226,7 @@ public class UserClient {
     // Gets savings by each month
     public JSONObject getMonthsSavings(){
         JSONObject savingsByMonth = new JSONObject();
-        int total_backtrack = 11; // goes from 11 to 0 which are 12 months iterations
+        int total_backtrack = backtrack; // goes from 11 to 0 which are 12 months iterations
         while (total_backtrack >= 0) {
             float savings = getMonthSavings(total_backtrack);
             savingsByMonth.accumulate(Integer.toString(total_backtrack), savings);
