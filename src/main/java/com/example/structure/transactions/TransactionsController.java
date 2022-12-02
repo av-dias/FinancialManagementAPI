@@ -3,6 +3,7 @@ package com.example.structure.transactions;
 import com.example.structure.userclient.UserClient;
 import com.example.structure.userclient.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,8 @@ public class TransactionsController {
     public TransactionsController(TransactionsService transactionsService){ this.transactionsService = transactionsService;}
 
     @GetMapping(path = "user/{userId}")
-    public Set<Transactions> getUserClients(@PathVariable("userId") Long userId) {
-        return transactionsService.getTransactionsSent(userId);
+    public String getUserClients(@PathVariable("userId") Long userId) {
+        return transactionsService.getTransactionsSent(userId).toString();
     }
 
     @PostMapping(path = "user/{userId}")
