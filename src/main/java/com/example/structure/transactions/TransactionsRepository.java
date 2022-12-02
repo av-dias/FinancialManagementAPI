@@ -9,4 +9,7 @@ import java.util.Set;
 public interface TransactionsRepository extends JpaRepository<Transactions, Long> {
     @Query("SELECT t FROM Transactions t WHERE t.user_origin_id = ?1")
     Optional<Set<Transactions>> findTransactionsSentByUser(Long id);
+
+    @Query("SELECT t FROM Transactions t WHERE t.user_destination_id = ?1")
+    Optional<Set<Transactions>> findTransactionsReceivedByUser(Long id);
 }
