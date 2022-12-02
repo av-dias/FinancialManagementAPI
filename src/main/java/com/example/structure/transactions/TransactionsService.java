@@ -2,6 +2,7 @@ package com.example.structure.transactions;
 
 import com.example.structure.userclient.UserClient;
 import com.example.structure.userclient.UserService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
@@ -21,8 +22,35 @@ public class TransactionsService {
         this.userService = userService;
     }
 
-    public Set<Transactions> getTransactionsSent(Long userId){
-        return getTransactionsSentFromUser(userId);
+    public JSONObject getTransactionsSent(Long userId){
+        JSONObject transactions = new JSONObject();
+        JSONObject transactionByMonth = new JSONObject();
+
+        Set<Transactions> sentTransactions = getTransactionsSentFromUser(userId);
+        Set<Transactions> receivedTransactions = getTransactionsReceivedByUser(userId);
+        float totalTransactionAmount=0;
+
+        for(Transactions t : sentTransactions)
+        {
+            int month = t.getDot().getMonthValue();
+            if(transactionByMonth.has(String.valueOf(month)))
+                transactionByMonth.put(String.valueOf(month), (float) -t.getAmount() + (float) transactionByMonth.get(String.valueOf(month)));
+            else
+                transactionByMonth.put(String.valueOf(month), (float) -t.getAmount());
+            totalTransactionAmount-=(float) t.getAmount();
+        };
+
+        for(Transactions t : receivedTransactions){
+            int month = t.getDot().getMonthValue();
+            if(transactionByMonth.has(String.valueOf(month)))
+                transactionByMonth.put(String.valueOf(month), (float) t.getAmount() + (float) transactionByMonth.get(String.valueOf(month)));
+            else
+                transactionByMonth.put(String.valueOf(month), (float) t.getAmount());
+            totalTransactionAmount+=(float) t.getAmount();
+        };
+        transactions.put("per_month", transactionByMonth);
+        transactions.put("total", totalTransactionAmount);
+        return transactions;
     }
 
     @Transactional
@@ -31,7 +59,20 @@ public class TransactionsService {
         userService.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
 
         //CHECK IF USER HAS TRANSACTIONS
-        return transactionsRepository.findTransactionsSentByUser(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " does not have transactions."));
+        Set<Transactions> sentTransactions = transactionsRepository.findTransactionsSentByUser(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " does not have transactions."));
+
+        return sentTransactions;
+    }
+
+    @Transactional
+    private Set<Transactions> getTransactionsReceivedByUser(Long userId) {
+        //CHECK IF USER ALREADY EXISTS
+        userService.findUser(userId).orElseThrow(() -> new IllegalStateException("User does not exist."));
+
+        //CHECK IF USER HAS TRANSACTIONS
+        Set<Transactions> receivedTransactions = transactionsRepository.findTransactionsReceivedByUser(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " does not have transactions."));
+
+        return receivedTransactions;
     }
 
     @Transactional
