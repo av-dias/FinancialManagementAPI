@@ -128,4 +128,26 @@ public class PurchaseService {
 
         return result;
     }
+
+    public JSONObject calcPurchaseTypeByMonthMine(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findPurchaseTypeByMonthRelative(userId);
+
+        res.forEach(row -> {
+            JSONObject temp = new JSONObject();
+            String[] rowTokenizer = row.split(",");
+            String[] tmpDate = rowTokenizer[2].split("[ -]");
+            String dayFormat = tmpDate[0] + "-" + tmpDate[1];
+
+            if(result.has(rowTokenizer[0])){
+                temp = (JSONObject) result.get(rowTokenizer[0]);
+                temp.put(dayFormat, rowTokenizer[1]);
+            }else{
+                temp.put(dayFormat, rowTokenizer[1]);
+            }
+            result.put(rowTokenizer[0],temp);
+        });
+
+        return result;
+    }
 }

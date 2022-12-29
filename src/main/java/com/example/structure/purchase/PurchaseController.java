@@ -49,6 +49,7 @@ public class PurchaseController {
             @PathVariable("userId") Long userId){
         JSONObject stats = new JSONObject();
         stats.put("TypeByMonthRelative", purchaseService.calcPurchaseTypeByMonthRelative(userId));
+        stats.put("TypeByMonthMine", purchaseService.calcPurchaseTypeByMonthMine(userId));
 
         return stats.toString();
     }
