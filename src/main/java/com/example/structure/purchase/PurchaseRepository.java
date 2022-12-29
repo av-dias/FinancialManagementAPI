@@ -27,4 +27,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 
     @Query(value = "SELECT purchase.type AS type, SUM(purchase.value) AS VALUE, DATE_TRUNC('month', dop) AS month FROM purchase FULL JOIN split ON split.id = purchase.split_id WHERE client_id = 1 GROUP BY TYPE, month ORDER BY MONTH, type", nativeQuery = true)
     Set<String> findPurchaseTypeByMonthRelative(Long Id);
+
+    @Query(value = "SELECT purchase.type AS TYPE, ROUND(SUM(purchase.value*COALESCE((100-split.weight)*0.01,1))::numeric,2) AS VALUE, DATE_TRUNC('month', dop) AS month FROM purchase FULL JOIN split ON split.id = purchase.split_id WHERE client_id = 1 GROUP BY TYPE, month ORDER BY MONTH, TYPE", nativeQuery = true)
+    Set<String> findPurchaseTypeByMonthMine(Long Id);
 }
