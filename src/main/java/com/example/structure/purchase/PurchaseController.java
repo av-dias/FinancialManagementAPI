@@ -1,5 +1,6 @@
 package com.example.structure.purchase;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +44,12 @@ public class PurchaseController {
         purchaseService.updatePurchase(purchaseId, purchase);
     }
 
-    ;
+    @GetMapping(path= "user/{userId}/stats")
+    public String updatePurchase(
+            @PathVariable("userId") Long userId){
+        JSONObject stats = new JSONObject();
+        stats.put("TypeByMonthRelative", purchaseService.calcPurchaseTypeByMonthRelative(userId));
+
+        return stats.toString();
+    }
 }

@@ -3,10 +3,13 @@ package com.example.structure.purchase;
 import com.example.structure.split.Split;
 import com.example.structure.userclient.UserClient;
 import com.example.structure.userclient.UserService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
@@ -102,5 +105,27 @@ public class PurchaseService {
 
     public String getUserByPurchase(Purchase p){
         return purchaseRepository.findUserbyPurchaseId(p.getId());
+    }
+
+    public JSONObject calcPurchaseTypeByMonthRelative(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findPurchaseTypeByMonthRelative(userId);
+
+        res.forEach(row -> {
+            JSONObject temp = new JSONObject();
+            String[] rowTokenizer = row.split(",");
+            String[] tmpDate = rowTokenizer[2].split("[ -]");
+            String dayFormat = tmpDate[0] + "-" + tmpDate[1];
+
+            if(result.has(rowTokenizer[0])){
+                temp = (JSONObject) result.get(rowTokenizer[0]);
+                temp.put(dayFormat, rowTokenizer[1]);
+            }else{
+                temp.put(dayFormat, rowTokenizer[1]);
+            }
+            result.put(rowTokenizer[0],temp);
+        });
+
+        return result;
     }
 }

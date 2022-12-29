@@ -1,6 +1,7 @@
 package com.example.structure.purchase;
 
 import com.example.structure.split.Split;
+import org.json.JSONObject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -23,4 +24,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 
     @Query(value = "SELECT client_id FROM Purchase WHERE id = ?1", nativeQuery = true)
     String findUserbyPurchaseId(Long Id);
+
+    @Query(value = "SELECT purchase.type AS type, SUM(purchase.value) AS VALUE, DATE_TRUNC('month', dop) AS month FROM purchase FULL JOIN split ON split.id = purchase.split_id WHERE client_id = 1 GROUP BY TYPE, month ORDER BY MONTH, type", nativeQuery = true)
+    Set<String> findPurchaseTypeByMonthRelative(Long Id);
 }
