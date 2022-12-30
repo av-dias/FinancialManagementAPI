@@ -48,8 +48,16 @@ public class PurchaseController {
     public String updatePurchase(
             @PathVariable("userId") Long userId){
         JSONObject stats = new JSONObject();
-        stats.put("TypeByMonthRelative", purchaseService.calcPurchaseTypeByMonthRelative(userId));
-        stats.put("TypeByMonthMine", purchaseService.calcPurchaseTypeByMonthMine(userId));
+        stats.put("purchaseTypeByMonthRelative", purchaseService.calcPurchaseTypeByMonthRelative(userId));
+        stats.put("purchaseTypeByMonthMine", purchaseService.calcPurchaseTypeByMonthMine(userId));
+        stats.put("purchaseTypeByMonthYour", purchaseService.calcPurchaseTypeByMonthYour(userId));
+        stats.put("purchaseTypeByMonthReal", purchaseService.calcPurchaseTypeByMonthReal(userId));
+        stats.put("purchaseTypeByMonthCouple", purchaseService.calcPurchaseTypeByMonthCouple(userId));
+        stats.put("purchaseTypeByAvgRelative", purchaseService.calcPurchaseTypeByAverageRelative(userId));
+        stats.put("purchaseTypeByAvgMine", purchaseService.calcPurchaseTypeByAverageMine(userId));
+        stats.put("purchaseTypeByAvgYour", purchaseService.calcPurchaseTypeByAverageYour(userId));
+        stats.put("purchaseTypeByAvgReal", purchaseService.calcPurchaseTypeByAverageReal(userId));
+        stats.put("purchaseTypeByAvgCouple", purchaseService.calcPurchaseTypeByAverageCouple(userId));
 
         return stats.toString();
     }
