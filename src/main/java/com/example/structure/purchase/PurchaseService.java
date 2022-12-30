@@ -7,9 +7,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
@@ -107,10 +105,7 @@ public class PurchaseService {
         return purchaseRepository.findUserbyPurchaseId(p.getId());
     }
 
-    public JSONObject calcPurchaseTypeByMonthRelative(Long userId){
-        JSONObject result = new JSONObject();
-        Set<String> res = purchaseRepository.findPurchaseTypeByMonthRelative(userId);
-
+    private JSONObject formatCalcMonthToJson(JSONObject result, Set<String> res ){
         res.forEach(row -> {
             JSONObject temp = new JSONObject();
             String[] rowTokenizer = row.split(",");
@@ -129,25 +124,83 @@ public class PurchaseService {
         return result;
     }
 
-    public JSONObject calcPurchaseTypeByMonthMine(Long userId){
-        JSONObject result = new JSONObject();
-        Set<String> res = purchaseRepository.findPurchaseTypeByMonthRelative(userId);
-
+    private JSONObject formatCalcAvgToJson(JSONObject result, Set<String> res ){
         res.forEach(row -> {
-            JSONObject temp = new JSONObject();
             String[] rowTokenizer = row.split(",");
-            String[] tmpDate = rowTokenizer[2].split("[ -]");
-            String dayFormat = tmpDate[0] + "-" + tmpDate[1];
 
-            if(result.has(rowTokenizer[0])){
-                temp = (JSONObject) result.get(rowTokenizer[0]);
-                temp.put(dayFormat, rowTokenizer[1]);
-            }else{
-                temp.put(dayFormat, rowTokenizer[1]);
-            }
-            result.put(rowTokenizer[0],temp);
+            result.put(rowTokenizer[0],rowTokenizer[1]);
         });
 
         return result;
+    }
+
+    public JSONObject calcPurchaseTypeByMonthRelative(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findPurchaseTypeByMonthRelative(userId);
+
+        return formatCalcMonthToJson(result, res);
+    }
+
+    public JSONObject calcPurchaseTypeByMonthMine(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findPurchaseTypeByMonthMine(userId);
+
+        return formatCalcMonthToJson(result, res);
+    }
+
+    public JSONObject calcPurchaseTypeByMonthYour(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findPurchaseTypeByMonthYour(userId);
+
+        return formatCalcMonthToJson(result, res);
+    }
+
+    public JSONObject calcPurchaseTypeByMonthReal(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findPurchaseTypeByMonthReal(userId);
+
+        return formatCalcMonthToJson(result, res);
+    }
+
+    public JSONObject calcPurchaseTypeByMonthCouple(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findPurchaseTypeByMonthCouple(userId);
+
+        return formatCalcMonthToJson(result, res);
+    }
+
+    public JSONObject calcPurchaseTypeByAverageRelative(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findPurchaseTypeByAverageRelative(userId);
+
+        return formatCalcAvgToJson(result, res);
+    }
+
+    public JSONObject calcPurchaseTypeByAverageMine(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findPurchaseTypeByAverageMine(userId);
+
+        return formatCalcAvgToJson(result, res);
+    }
+
+    public JSONObject calcPurchaseTypeByAverageYour(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findPurchaseTypeByAverageYour(userId);
+
+        return formatCalcAvgToJson(result, res);
+    }
+
+    public JSONObject calcPurchaseTypeByAverageReal(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findPurchaseTypeByAverageReal(userId);
+
+        return formatCalcAvgToJson(result, res);
+    }
+
+    public JSONObject calcPurchaseTypeByAverageCouple(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findPurchaseTypeByAverageCouple(userId);
+
+        return formatCalcAvgToJson(result, res);
     }
 }
