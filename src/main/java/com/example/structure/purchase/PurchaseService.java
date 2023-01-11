@@ -112,13 +112,13 @@ public class PurchaseService {
             String[] tmpDate = rowTokenizer[2].split("[ -]");
             String dayFormat = tmpDate[0] + "-" + tmpDate[1];
 
-            if(result.has(rowTokenizer[0])){
-                temp = (JSONObject) result.get(rowTokenizer[0]);
-                temp.put(dayFormat, rowTokenizer[1]);
+            if(result.has(dayFormat)){
+                temp = (JSONObject) result.get(dayFormat);
+                temp.put(rowTokenizer[0], rowTokenizer[1]);
             }else{
-                temp.put(dayFormat, rowTokenizer[1]);
+                temp.put(rowTokenizer[0], rowTokenizer[1]);
             }
-            result.put(rowTokenizer[0],temp);
+            result.put(dayFormat,temp);
         });
 
         return result;
