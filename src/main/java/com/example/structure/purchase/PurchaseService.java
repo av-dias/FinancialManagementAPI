@@ -110,7 +110,7 @@ public class PurchaseService {
             JSONObject temp = new JSONObject();
             String[] rowTokenizer = row.split(",");
             String[] tmpDate = rowTokenizer[2].split("[ -]");
-            String dayFormat = tmpDate[0] + "-" + tmpDate[1];
+            String dayFormat = tmpDate[0] + tmpDate[1];
 
             if(result.has(dayFormat)){
                 temp = (JSONObject) result.get(dayFormat);

@@ -28,7 +28,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     @Query(value = "SELECT purchase.type AS type, SUM(purchase.value) AS VALUE, DATE_TRUNC('month', dop) AS month FROM purchase FULL JOIN split ON split.id = purchase.split_id WHERE client_id = 1 GROUP BY TYPE, month ORDER BY MONTH, type", nativeQuery = true)
     Set<String> findPurchaseTypeByMonthRelative(Long Id);
 
-    @Query(value = "SELECT TYPE, ROUND(AVG(VALUE)\\:\\:NUMERIC, 2)  FROM\n" +
+    @Query(value = "SELECT TYPE, ROUND((SUM(VALUE)/(SELECT COUNT(DISTINCT DATE_TRUNC('month', dop) ) AS month_count FROM purchase WHERE client_id=1))\\:\\:NUMERIC, 2)  FROM\n" +
             "\t(SELECT purchase.type AS type, SUM(purchase.value) AS VALUE, DATE_TRUNC('month', dop) AS month FROM purchase FULL JOIN split ON split.id = purchase.split_id WHERE client_id = 1 GROUP BY TYPE, month ORDER BY MONTH, TYPE) AS tmp\n" +
             "GROUP BY TYPE ORDER BY type", nativeQuery = true)
     Set<String> findPurchaseTypeByAverageRelative(Long Id);
@@ -36,7 +36,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     @Query(value = "SELECT purchase.type AS TYPE, ROUND(SUM(purchase.value*COALESCE((100-split.weight)*0.01,1))\\:\\:numeric,2) AS VALUE, DATE_TRUNC('month', dop) AS month FROM purchase FULL JOIN split ON split.id = purchase.split_id WHERE client_id = 1 GROUP BY TYPE, month ORDER BY MONTH, TYPE", nativeQuery = true)
     Set<String> findPurchaseTypeByMonthMine(Long Id);
 
-    @Query(value = "SELECT TYPE, ROUND(AVG(VALUE)\\:\\:NUMERIC, 2) FROM\n" +
+    @Query(value = "SELECT TYPE, ROUND((SUM(VALUE)/(SELECT COUNT(DISTINCT DATE_TRUNC('month', dop) ) AS month_count FROM purchase WHERE client_id=1))\\:\\:NUMERIC, 2) FROM\n" +
             "\t(SELECT purchase.type AS TYPE, ROUND(SUM(purchase.value*COALESCE((100-split.weight)*0.01,1))\\:\\:numeric,2) AS VALUE, DATE_TRUNC('month', dop) AS month FROM purchase FULL JOIN split ON split.id = purchase.split_id WHERE client_id = 1 GROUP BY TYPE, month ORDER BY MONTH, TYPE) AS tmp\n" +
             "\tGROUP BY TYPE", nativeQuery = true)
     Set<String> findPurchaseTypeByAverageMine(Long Id);
@@ -44,7 +44,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     @Query(value = "SELECT purchase.type AS TYPE, ROUND(SUM(purchase.value*COALESCE((split.weight)*0.01,0))\\:\\:numeric,2) AS VALUE, DATE_TRUNC('month', dop) AS month FROM purchase FULL JOIN split ON split.id = purchase.split_id WHERE client_id = 1 GROUP BY TYPE, month ORDER BY MONTH, TYPE", nativeQuery = true)
     Set<String> findPurchaseTypeByMonthYour(Long Id);
 
-    @Query(value = "SELECT TYPE, ROUND(AVG(VALUE)\\:\\:NUMERIC, 2) FROM\n" +
+    @Query(value = "SELECT TYPE, ROUND((SUM(VALUE)/(SELECT COUNT(DISTINCT DATE_TRUNC('month', dop) ) AS month_count FROM purchase WHERE client_id=1))\\:\\:NUMERIC, 2) FROM\n" +
             "\t(SELECT purchase.type AS TYPE, ROUND(SUM(purchase.value*COALESCE((split.weight)*0.01,0))\\:\\:numeric,2) AS VALUE, DATE_TRUNC('month', dop) AS month FROM purchase FULL JOIN split ON split.id = purchase.split_id WHERE client_id = 1 GROUP BY TYPE, month ORDER BY MONTH, TYPE) AS tmp\n" +
             "\tGROUP BY TYPE\n", nativeQuery = true)
     Set<String> findPurchaseTypeByAverageYour(Long Id);
@@ -61,7 +61,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
             "GROUP BY TYPE, MONTH ORDER BY MONTH, TYPE;", nativeQuery = true)
     Set<String> findPurchaseTypeByMonthReal(Long Id);
 
-    @Query(value = "SELECT TYPE, ROUND(AVG(VALUE)\\:\\:NUMERIC, 2) FROM\n" +
+    @Query(value = "SELECT TYPE, ROUND((SUM(VALUE)/(SELECT COUNT(DISTINCT DATE_TRUNC('month', dop) ) AS month_count FROM purchase WHERE client_id=1))\\:\\:NUMERIC, 2) FROM\n" +
             "\t(SELECT TYPE, SUM(VALUE) AS VALUE, MONTH FROM \n" +
             "\t(SELECT purchase.client_id, purchase.type AS TYPE, \n" +
             "\t\tCASE \n" +
@@ -78,9 +78,12 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     @Query(value = "SELECT purchase.type AS TYPE, SUM(purchase.value) AS VALUE, DATE_TRUNC('month', dop) AS MONTH FROM purchase FULL JOIN split ON split.id = purchase.split_id WHERE client_id = 1 OR client_id=2 GROUP BY TYPE, month ORDER BY  MONTH, TYPE", nativeQuery = true)
     Set<String> findPurchaseTypeByMonthCouple(Long Id);
 
-    @Query(value = "SELECT TYPE, ROUND(AVG(VALUE)\\:\\:NUMERIC, 2) FROM\n" +
+    @Query(value = "SELECT TYPE, ROUND((SUM(VALUE)/(SELECT COUNT(DISTINCT DATE_TRUNC('month', dop) ) AS month_count FROM purchase WHERE client_id=1))\\:\\:NUMERIC, 2) FROM\n" +
             "\t(SELECT purchase.type AS TYPE, SUM(purchase.value) AS VALUE, DATE_TRUNC('month', dop) AS MONTH FROM purchase FULL JOIN split ON split.id = purchase.split_id WHERE client_id = 1 OR client_id=2 GROUP BY TYPE, month ORDER BY  MONTH, TYPE) AS tmp\n" +
             "\tGROUP BY TYPE", nativeQuery = true)
     Set<String> findPurchaseTypeByAverageCouple(Long Id);
+
+    @Query(value = "SELECT ROUND(SUM(purchase.value*COALESCE((100-split.weight)*0.01,1))\\:\\:numeric,2) AS VALUE, DATE_TRUNC('month', dop) AS month FROM purchase FULL JOIN split ON split.id = purchase.split_id WHERE client_id = 1 GROUP BY month ORDER BY MONTH;\n", nativeQuery = true)
+    Set<String> findMonthlyMinePurchase(Long Id);
 
 }
