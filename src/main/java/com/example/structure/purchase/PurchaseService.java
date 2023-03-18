@@ -3,10 +3,14 @@ package com.example.structure.purchase;
 import com.example.structure.split.Split;
 import com.example.structure.userclient.UserClient;
 import com.example.structure.userclient.UserService;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
+import javax.xml.transform.Result;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
@@ -124,6 +128,24 @@ public class PurchaseService {
         return result;
     }
 
+    private JSONObject formatResultDate(JSONObject result, Set<String> res ){
+        res.forEach(row -> {
+            JSONObject temp = new JSONObject();
+            String[] rowTokenizer = row.split(",");
+            String[] tmpDate = rowTokenizer[1].split("[ -]");
+            String dayFormat = tmpDate[0] + tmpDate[1];
+
+            result.put(dayFormat,rowTokenizer[0]);
+        });
+
+        return result;
+    }
+    private JSONObject formatResultoJson(JSONObject result, Set<String> res ){
+            result.put("result",res.toArray()[0]);
+        return result;
+    }
+
+
     private JSONObject formatCalcAvgToJson(JSONObject result, Set<String> res ){
         res.forEach(row -> {
             String[] rowTokenizer = row.split(",");
@@ -140,6 +162,11 @@ public class PurchaseService {
 
         return formatCalcMonthToJson(result, res);
     }
+
+
+    /********** ********** **********
+     Type and Average by Type Monthly Spendings Chart
+     ********** ********** ********** */
 
     public JSONObject calcPurchaseTypeByMonthMine(Long userId){
         JSONObject result = new JSONObject();
@@ -202,5 +229,63 @@ public class PurchaseService {
         Set<String> res = purchaseRepository.findPurchaseTypeByAverageCouple(userId);
 
         return formatCalcAvgToJson(result, res);
+    }
+
+    /********** ********** **********
+     Monthly Spendings Chart
+     ********** ********** ********** */
+    public JSONObject calcMonthlySpendingMine(Long userId) throws SQLException {
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findMonthlyMinePurchase(userId);
+
+        return formatResultDate(result,res);
+    }
+
+    public JSONObject calcMonthlySpendingReal(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findMonthlyRealPurchase(userId);
+
+        return formatResultDate(result, res);
+    }
+
+    public JSONObject calcMonthlySpendingCouple(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findMonthlyCouplePurchase(userId);
+
+        return formatResultDate(result, res);
+    }
+
+    /********** ********** **********
+     Monthly Cumulative Earnings
+     ********** ********** ********** */
+    public JSONObject calcMonthlyCumulativeEarning(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findMonthlyCumulativeEarning(userId);
+
+        return formatResultDate(result, res);
+    }
+
+    /********** ********** **********
+     Total Average Spending
+     ********** ********** ********** */
+    public JSONObject calcMineTotalAverage(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findMineTotalAverage(userId);
+
+        return formatResultoJson(result, res);
+    }
+
+    public JSONObject calcRealTotalAverage(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findRealTotalAverage(userId);
+
+        return formatResultoJson(result, res);
+    }
+
+    public JSONObject calcCoupleTotalAverage(Long userId){
+        JSONObject result = new JSONObject();
+        Set<String> res = purchaseRepository.findCoupleTotalAverage(userId);
+
+        return formatResultoJson(result, res);
     }
 }
