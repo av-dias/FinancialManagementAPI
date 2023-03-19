@@ -51,26 +51,20 @@ public class PurchaseController {
         JSONObject stats = new JSONObject();
 
         //Type and Average by Type Monthly Spendings Chart
-        stats.put("purchaseTypeByMonthMine", purchaseService.calcPurchaseTypeByMonthMine(userId));
-        stats.put("purchaseTypeByAvgMine", purchaseService.calcPurchaseTypeByAverageMine(userId));
+        stats.put("purchaseTypeByMonthRelative", purchaseService.calcPurchaseTypeByMonthRelative(userId));
+        stats.put("purchaseTypeByAvgRelative", purchaseService.calcPurchaseTypeByAverageRelative(userId));
         stats.put("purchaseTypeByMonthReal", purchaseService.calcPurchaseTypeByMonthReal(userId));
         stats.put("purchaseTypeByAvgReal", purchaseService.calcPurchaseTypeByAverageReal(userId));
         stats.put("purchaseTypeByMonthCouple", purchaseService.calcPurchaseTypeByMonthCouple(userId));
         stats.put("purchaseTypeByAvgCouple", purchaseService.calcPurchaseTypeByAverageCouple(userId));
 
         //Monthly Cumulative Earnings
-        stats.put("cumulativeMonthlyEarningMine", purchaseService.calcMonthlyCumulativeEarning(userId));
+        stats.put("monthlyEarning", purchaseService.calcMonthlyCumulativeEarning(userId));
 
         //Monthly Spendings Chart
-        stats.put("spendingsMonthlyMine", purchaseService.calcMonthlySpendingMine(userId));
+        stats.put("spendingsMonthlyRelative", purchaseService.calcMonthlySpendingRelative(userId));
         stats.put("spendingsMonthlyReal", purchaseService.calcMonthlySpendingReal(userId));
         stats.put("spendingsMonthlyCouple", purchaseService.calcMonthlySpendingCouple(userId));
-
-        //Monthly Average Spending
-        stats.put("totalAverageMine", purchaseService.calcMineTotalAverage(userId));
-        stats.put("totalAverageReal", purchaseService.calcRealTotalAverage(userId));
-        stats.put("totalAverageCouple", purchaseService.calcCoupleTotalAverage(userId));
-
 
         return stats.toString();
     }

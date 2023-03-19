@@ -156,21 +156,13 @@ public class PurchaseService {
         return result;
     }
 
-    public JSONObject calcPurchaseTypeByMonthRelative(Long userId){
-        JSONObject result = new JSONObject();
-        Set<String> res = purchaseRepository.findPurchaseTypeByMonthRelative(userId);
-
-        return formatCalcMonthToJson(result, res);
-    }
-
-
     /********** ********** **********
      Type and Average by Type Monthly Spendings Chart
      ********** ********** ********** */
 
-    public JSONObject calcPurchaseTypeByMonthMine(Long userId){
+    public JSONObject calcPurchaseTypeByMonthRelative(Long userId){
         JSONObject result = new JSONObject();
-        Set<String> res = purchaseRepository.findPurchaseTypeByMonthMine(userId);
+        Set<String> res = purchaseRepository.findPurchaseTypeByMonthRelative(userId);
 
         return formatCalcMonthToJson(result, res);
     }
@@ -203,13 +195,6 @@ public class PurchaseService {
         return formatCalcAvgToJson(result, res);
     }
 
-    public JSONObject calcPurchaseTypeByAverageMine(Long userId){
-        JSONObject result = new JSONObject();
-        Set<String> res = purchaseRepository.findPurchaseTypeByAverageMine(userId);
-
-        return formatCalcAvgToJson(result, res);
-    }
-
     public JSONObject calcPurchaseTypeByAverageYour(Long userId){
         JSONObject result = new JSONObject();
         Set<String> res = purchaseRepository.findPurchaseTypeByAverageYour(userId);
@@ -234,9 +219,9 @@ public class PurchaseService {
     /********** ********** **********
      Monthly Spendings Chart
      ********** ********** ********** */
-    public JSONObject calcMonthlySpendingMine(Long userId) throws SQLException {
+    public JSONObject calcMonthlySpendingRelative(Long userId) throws SQLException {
         JSONObject result = new JSONObject();
-        Set<String> res = purchaseRepository.findMonthlyMinePurchase(userId);
+        Set<String> res = purchaseRepository.findMonthlyRelativePurchase(userId);
 
         return formatResultDate(result,res);
     }
@@ -260,32 +245,8 @@ public class PurchaseService {
      ********** ********** ********** */
     public JSONObject calcMonthlyCumulativeEarning(Long userId){
         JSONObject result = new JSONObject();
-        Set<String> res = purchaseRepository.findMonthlyCumulativeEarning(userId);
+        Set<String> res = purchaseRepository.findMonthlyEarning(userId);
 
         return formatResultDate(result, res);
-    }
-
-    /********** ********** **********
-     Total Average Spending
-     ********** ********** ********** */
-    public JSONObject calcMineTotalAverage(Long userId){
-        JSONObject result = new JSONObject();
-        Set<String> res = purchaseRepository.findMineTotalAverage(userId);
-
-        return formatResultoJson(result, res);
-    }
-
-    public JSONObject calcRealTotalAverage(Long userId){
-        JSONObject result = new JSONObject();
-        Set<String> res = purchaseRepository.findRealTotalAverage(userId);
-
-        return formatResultoJson(result, res);
-    }
-
-    public JSONObject calcCoupleTotalAverage(Long userId){
-        JSONObject result = new JSONObject();
-        Set<String> res = purchaseRepository.findCoupleTotalAverage(userId);
-
-        return formatResultoJson(result, res);
     }
 }
