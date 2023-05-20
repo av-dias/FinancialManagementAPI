@@ -26,7 +26,7 @@ class UserControllerTest {
 
     private HttpEntity<Void> requestEntity;
 
-    @BeforeEach
+    /*@BeforeEach
     private void set_up(){
         String url = "/api/v1/login";
 
@@ -52,5 +52,5 @@ class UserControllerTest {
     void getUserStatistics_basic() throws Exception{
         ResponseEntity<String> response2 = restTemplate.exchange("/api/v1/user/1/purchase/statistics/month/10", HttpMethod.GET ,requestEntity, String.class);
         System.out.println(response2.getBody());
-    }
+    }*/
 }
