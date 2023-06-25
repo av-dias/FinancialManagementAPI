@@ -1,5 +1,6 @@
 package com.example.structure.purchase;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -67,5 +68,13 @@ public class PurchaseController {
         stats.put("spendingsMonthlyCouple", purchaseService.calcMonthlySpendingCouple(userId));
 
         return stats.toString();
+    }
+
+    @PostMapping(path = "/mobile/user/{userId}/update/purchases/")
+    public String registerMobilePurchases(@RequestBody String details, @PathVariable("userId") Long userId) {
+        JSONArray result = purchaseService.addMobilePurchases(details, userId);
+
+        //System.out.println(result);
+        return result.toString();
     }
 }

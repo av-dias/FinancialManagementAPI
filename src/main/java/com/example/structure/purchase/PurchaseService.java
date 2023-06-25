@@ -3,12 +3,19 @@ package com.example.structure.purchase;
 import com.example.structure.split.Split;
 import com.example.structure.userclient.UserClient;
 import com.example.structure.userclient.UserService;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import javax.xml.transform.Result;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -248,5 +255,28 @@ public class PurchaseService {
         Set<String> res = purchaseRepository.findMonthlyEarning(userId);
 
         return formatResultDate(result, res);
+    }
+
+    public JSONArray addMobilePurchases(String details, Long userId){
+        JSONArray result = new JSONArray(details);
+        final ObjectMapper mapper = new ObjectMapper()
+                .registerModule(new ParameterNamesModule())
+                .registerModule(new Jdk8Module())
+                .registerModule(new JavaTimeModule());
+
+        result.forEach( jsonP -> {
+            //map json to purchase
+            try{
+                Purchase p = mapper.readValue(jsonP.toString(), Purchase.class);
+                addNewPurchase(p, userId);
+                System.out.println(p);
+            }
+            catch (JsonParseException e) { e.printStackTrace();}
+            catch (JsonMappingException e) { e.printStackTrace(); }
+            catch (IOException e) { e.printStackTrace(); }
+            //System.out.println(result);
+        });
+
+        return result;
     }
 }
