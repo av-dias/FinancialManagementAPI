@@ -5,7 +5,7 @@ services:
     ports:
       - "3000:3000"
   web:
-    build: .
+    image: fm_web:latest
     ports:
       - "8080:8080"
     links:

@@ -257,7 +257,7 @@ public class PurchaseService {
         return formatResultDate(result, res);
     }
 
-    public JSONArray addMobilePurchases(String details, Long userId){
+    public void addMobilePurchases(String details, Long userId){
         JSONArray result = new JSONArray(details);
         final ObjectMapper mapper = new ObjectMapper()
                 .registerModule(new ParameterNamesModule())
@@ -276,7 +276,5 @@ public class PurchaseService {
             catch (IOException e) { e.printStackTrace(); }
             //System.out.println(result);
         });
-
-        return result;
     }
 }

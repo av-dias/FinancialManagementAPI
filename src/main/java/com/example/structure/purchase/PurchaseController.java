@@ -70,11 +70,10 @@ public class PurchaseController {
         return stats.toString();
     }
 
-    @PostMapping(path = "/mobile/user/{userId}/update/purchases/")
+    @PostMapping(path = "mobile/user/{userId}/update/purchases")
     public String registerMobilePurchases(@RequestBody String details, @PathVariable("userId") Long userId) {
-        JSONArray result = purchaseService.addMobilePurchases(details, userId);
+        purchaseService.addMobilePurchases(details, userId);
 
-        //System.out.println(result);
-        return result.toString();
+        return "{'rowCount': 'success'}";
     }
 }
