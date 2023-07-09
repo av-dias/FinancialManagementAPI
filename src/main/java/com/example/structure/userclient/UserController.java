@@ -45,6 +45,16 @@ public class UserController {
         return userService.getUserClients();
     }
 
+    @GetMapping(path = "/email/{userEmail}")
+    public String getUserId(@PathVariable("userEmail") String userEmail) {
+        Optional<UserClient> user = userService.getUser(userEmail);
+        //CHECK IF USER IS EXISTS
+        if (!user.isPresent())
+            throw new IllegalStateException("User does not exist.");
+
+        return "{\"userId\":" + user.get().getId() + '}';
+    }
+
     @PostMapping
     public void registerNewUserClient(@RequestBody UserClient userClient) {
         userService.addNewUser(userClient);
