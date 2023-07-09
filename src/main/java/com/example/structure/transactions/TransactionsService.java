@@ -53,6 +53,18 @@ public class TransactionsService {
         return transactions;
     }
 
+    public JSONObject getTransactionsList(Long userId){
+        JSONObject transactions = new JSONObject();
+        JSONObject transactionReceived = new JSONObject();
+
+        Set<Transactions> sentTransactions = getTransactionsSentFromUser(userId);
+        Set<Transactions> receivedTransactions = getTransactionsReceivedByUser(userId);
+
+        transactions.put("sent", sentTransactions);
+        transactions.put("received", receivedTransactions);
+        return transactions;
+    }
+
     @Transactional
     private Set<Transactions> getTransactionsSentFromUser(Long userId) {
         //CHECK IF USER ALREADY EXISTS

@@ -25,6 +25,12 @@ public class TransactionsController {
         return transactionsService.getTransactionsSent(userId).toString();
     }
 
+    @GetMapping(path = "list/user/{userId}")
+    public String getTransactionList(@PathVariable("userId") Long userId) {
+        return transactionsService.getTransactionsList(userId).toString();
+    }
+
+
     @PostMapping(path = "user/{userId}")
     public void registerNewTransaction(@RequestBody Transactions transactions,
                                        @RequestParam String destination_email,
