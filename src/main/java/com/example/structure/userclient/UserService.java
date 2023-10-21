@@ -3,8 +3,6 @@ package com.example.structure.userclient;
 import com.example.structure.income.Income;
 import com.example.structure.purchase.Purchase;
 import com.example.structure.transactions.Transactions;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import org.apache.catalina.User;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -14,9 +14,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
-import javax.xml.transform.Result;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -78,7 +76,7 @@ public class PurchaseService {
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(() -> new IllegalStateException("purchase with id " + purchaseId + " does not exists"));
         String name = newPurchase.getName();
         String type = newPurchase.getType();
-        String subType = newPurchase.getSubType();
+        String note = newPurchase.getNote();
         Float value = newPurchase.getValue();
         LocalDate dop = newPurchase.getDop();
 
@@ -90,8 +88,8 @@ public class PurchaseService {
             purchase.setType(type);
         }
 
-        if (subType != null && subType.length() > 0) {
-            purchase.setSubType(subType);
+        if (note != null && note.length() > 0) {
+            purchase.setNote(note);
         }
 
         if (value != null) {
@@ -256,7 +254,7 @@ public class PurchaseService {
 
         return formatResultDate(result, res);
     }
-
+    @Transactional
     public void addMobilePurchases(String details, Long userId){
         JSONArray result = new JSONArray(details);
         final ObjectMapper mapper = new ObjectMapper()
@@ -267,6 +265,12 @@ public class PurchaseService {
         result.forEach( jsonP -> {
             //map json to purchase
             try{
+                // {purchase:{name:"A", value:"200", etc...}, split:{weight:50, userEmail: "b@gmail.com"}}
+                // if(json.split) Split s = mapper.readValue(json.split.toString(), Split.class);
+                // Purchase p = mapper.readValue(json.purchase.toString(), Purchase.class);
+                // addNewSplit(s, userId);
+                // addNewPurchase(p,userId);
+                // addSplitToPurchase(s);
                 Purchase p = mapper.readValue(jsonP.toString(), Purchase.class);
                 addNewPurchase(p, userId);
                 System.out.println(p);

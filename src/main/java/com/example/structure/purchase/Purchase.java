@@ -23,7 +23,7 @@ public class Purchase {
     private Float value;
     private String name;
     private String type;
-    private String subType;
+    private String note;
     private LocalDate dop; // date of purchase
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -88,12 +88,12 @@ public class Purchase {
         this.dop = dop;
     }
 
-    public String getSubType() {
-        return subType;
+    public String getNote() {
+        return note;
     }
 
-    public void setSubType(String subType) {
-        this.subType = subType;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public Split getSplit() {
@@ -117,8 +117,9 @@ public class Purchase {
         return "Purchase{" +
                 "id=" + id +
                 ", value=" + value +
-                ", type='" + name + '\'' +
-                ", subType='" + type + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", note='" + note + '\'' +
                 ", dop=" + dop +
                 '}';
     }
