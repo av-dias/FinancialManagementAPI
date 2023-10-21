@@ -12,6 +12,6 @@ public interface SplitRepository extends JpaRepository<Split, Long> {
     @Query("SELECT s FROM Split s WHERE s.id = ?1")
     Split findSplitById(Long id);
 
-    @Query("SELECT s FROM Split s WHERE s.user_id = ?1")
+    @Query("SELECT s FROM Split s WHERE s.userId = ?1")
     Optional<Set<Split>> findSplitbyUser(Long userId);
 }

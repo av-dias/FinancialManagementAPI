@@ -36,6 +36,10 @@ public class UserClient {
     private Set<Income> income;
 
     @OneToMany
+    @JoinColumn(name = "userId", referencedColumnName = "id")
+    private Set<Split> split;
+
+    @OneToMany
     @JoinColumn(name = "user_origin_id", referencedColumnName = "id")
     private Set<Transactions> transactionsSent;
 
@@ -124,7 +128,7 @@ public class UserClient {
         JSONObject purchaseBySplitUser = new JSONObject();
         Map<String, JSONObject> mapUsers = new HashMap<>();
         purchasesWithSplit.forEach(pwS -> {
-            Long sUser = pwS.getSplit().getUserClientId();
+            Long sUser = pwS.getSplit().getUserId();
             String splitUser = sUser.toString();
             if (mapUsers.containsKey(splitUser)) {
                 JSONObject json = mapUsers.get(splitUser);
@@ -274,7 +278,6 @@ public class UserClient {
         Iterator iter = this.purchases.iterator();
 
         JSONObject purchaseByType = new JSONObject();
-        Calendar calendar = Calendar.getInstance();
         int month = month_backtrack;
 
         while (iter.hasNext()) {

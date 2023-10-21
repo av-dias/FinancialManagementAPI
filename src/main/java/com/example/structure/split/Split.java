@@ -1,10 +1,5 @@
 package com.example.structure.split;
 
-import com.example.structure.userclient.UserClient;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 
 @Entity
@@ -21,16 +16,16 @@ public class Split {
             generator = "split_sequence"
     )
     private Long id;
-    private Long user_id;
+    private Long userId;
     private int weight;
 
     public Split(int weight) {
         this.weight = weight;
     }
 
-    public Split(int weight, Long user_id) {
+    public Split(int weight, Long userId) {
         this.weight = weight;
-        this.user_id = user_id;
+        this.userId = userId;
     }
 
     public Split() {
@@ -52,11 +47,20 @@ public class Split {
         this.weight = weight;
     }
 
-    public Long getUserClientId() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUserClientId(Long userClientId) {
-        this.user_id = userClientId;
+    public void setUserId(Long user_id) {
+        this.userId = user_id;
+    }
+
+    @Override
+    public String toString() {
+        return "Split{" +
+                "id=" + id +
+                ", weight=" + weight +
+                ", userId='" + userId +
+                '}';
     }
 }

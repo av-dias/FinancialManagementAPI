@@ -4,21 +4,26 @@ import com.example.structure.split.Split;
 import com.example.structure.userclient.UserClient;
 import com.example.structure.userclient.UserService;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.json.simple.JSONObject;
+import utility.protection.UserProtection;
 
 @Component
 public class PurchaseService {
@@ -26,10 +31,13 @@ public class PurchaseService {
     private final PurchaseRepository purchaseRepository;
     private final UserService userService;
 
+    private final UserProtection userProtection;
+
     @Autowired
     public PurchaseService(PurchaseRepository purchaseRepository, UserService userService) {
         this.purchaseRepository = purchaseRepository;
         this.userService = userService;
+        this.userProtection = new UserProtection(userService);
     }
 
     public Set<Purchase> getPurchases(Long userId) {
@@ -121,7 +129,7 @@ public class PurchaseService {
             String[] tmpDate = rowTokenizer[2].split("[ -]");
             String dayFormat = tmpDate[0] + tmpDate[1];
 
-            if(result.has(dayFormat)){
+            if(result.containsKey(dayFormat)){
                 temp = (JSONObject) result.get(dayFormat);
                 temp.put(rowTokenizer[0], rowTokenizer[1]);
             }else{
@@ -264,21 +272,34 @@ public class PurchaseService {
 
         result.forEach( jsonP -> {
             //map json to purchase
-            try{
-                // {purchase:{name:"A", value:"200", etc...}, split:{weight:50, userEmail: "b@gmail.com"}}
-                // if(json.split) Split s = mapper.readValue(json.split.toString(), Split.class);
-                // Purchase p = mapper.readValue(json.purchase.toString(), Purchase.class);
-                // addNewSplit(s, userId);
-                // addNewPurchase(p,userId);
-                // addSplitToPurchase(s);
+            try
+            {
+                JSONParser jsonParser = new JSONParser();
+                JSONObject jsonValue = (JSONObject) jsonParser.parse(jsonP.toString());;
+
+                if(jsonValue.containsKey("split")){
+                    JSONObject splitValue = (JSONObject) jsonValue.get("split");
+                    String email = (String) splitValue.get("userId");
+                    Optional<UserClient> _userClient = userProtection.hasUser(email);
+                    if (_userClient.isPresent()) {
+                        ((JSONObject) jsonValue.get("split")).put("userId", _userClient.get().getId());
+                        jsonP = jsonValue;
+                    }else {
+                        jsonValue.remove("split");
+                    }
+                }
+
                 Purchase p = mapper.readValue(jsonP.toString(), Purchase.class);
                 addNewPurchase(p, userId);
                 System.out.println(p);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            } catch (JsonMappingException e) {
+                throw new RuntimeException(e);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
             }
-            catch (JsonParseException e) { e.printStackTrace();}
-            catch (JsonMappingException e) { e.printStackTrace(); }
-            catch (IOException e) { e.printStackTrace(); }
-            //System.out.println(result);
+            System.out.println(result);
         });
     }
 }

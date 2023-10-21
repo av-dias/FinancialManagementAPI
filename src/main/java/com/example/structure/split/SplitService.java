@@ -146,11 +146,11 @@ public class SplitService {
     @Transactional
     public void updateSplit(Long splitId, Split newSplit) {
         Split split = splitRepository.findById(splitId).orElseThrow(() -> new IllegalStateException("split with id " + splitId + " does not exists"));
-        Long userClientId = newSplit.getUserClientId();
+        Long userClientId = newSplit.getUserId();
         int weight = newSplit.getWeight();
 
         if (userClientId != null && userClientId > 0) {
-            split.setUserClientId(userClientId);
+            split.setUserId(userClientId);
         }
 
         if (weight >= 0 && weight <=100) {

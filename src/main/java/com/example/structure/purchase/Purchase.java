@@ -120,7 +120,8 @@ public class Purchase {
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", note='" + note + '\'' +
-                ", dop=" + dop +
+                ", dop=" + dop + '\'' +
+                ", split=" + split +
                 '}';
     }
 }
