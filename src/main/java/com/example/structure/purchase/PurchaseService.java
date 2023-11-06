@@ -275,7 +275,7 @@ public class PurchaseService {
             try
             {
                 JSONParser jsonParser = new JSONParser();
-                JSONObject jsonValue = (JSONObject) jsonParser.parse(jsonP.toString());;
+                JSONObject jsonValue = (JSONObject) jsonParser.parse(jsonP.toString());
 
                 if(jsonValue.containsKey("split")){
                     JSONObject splitValue = (JSONObject) jsonValue.get("split");

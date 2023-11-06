@@ -37,4 +37,11 @@ public class TransactionsController {
                                        @PathVariable("userId") Long userId) {
         transactionsService.addNewTransactions(userId, transactions, destination_email);
     }
+
+    @PostMapping(path = "mobile/user/{userId}/update/transactions")
+    public String registerMobilePurchases(@RequestBody String details, @PathVariable("userId") Long userId) {
+        transactionsService.addMobileTransactions(details, userId);
+
+        return "{'rowCount': 'success'}";
+    }
 }

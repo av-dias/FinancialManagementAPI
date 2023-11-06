@@ -1,12 +1,25 @@
 package com.example.structure.transactions;
 
+import com.example.structure.purchase.Purchase;
 import com.example.structure.userclient.UserClient;
 import com.example.structure.userclient.UserService;
-import org.json.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import org.json.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import utility.protection.UserProtection;
+
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -33,7 +46,7 @@ public class TransactionsService {
         for(Transactions t : sentTransactions)
         {
             int month = t.getDot().getMonthValue();
-            if(transactionByMonth.has(String.valueOf(month)))
+            if(transactionByMonth.containsKey(String.valueOf(month)))
                 transactionByMonth.put(String.valueOf(month), (float) -t.getAmount() + (float) transactionByMonth.get(String.valueOf(month)));
             else
                 transactionByMonth.put(String.valueOf(month), (float) -t.getAmount());
@@ -42,7 +55,7 @@ public class TransactionsService {
 
         for(Transactions t : receivedTransactions){
             int month = t.getDot().getMonthValue();
-            if(transactionByMonth.has(String.valueOf(month)))
+            if(transactionByMonth.containsKey(String.valueOf(month)))
                 transactionByMonth.put(String.valueOf(month), (float) t.getAmount() + (float) transactionByMonth.get(String.valueOf(month)));
             else
                 transactionByMonth.put(String.valueOf(month), (float) t.getAmount());
@@ -114,5 +127,31 @@ public class TransactionsService {
             System.out.println(e);
         }
         userService.saveTransactionFromUser(transactions, userId);
+    }
+
+    public void addMobileTransactions(String details, Long userId) {
+        JSONArray result = new JSONArray(details);
+        final ObjectMapper mapper = new ObjectMapper()
+                .registerModule(new ParameterNamesModule())
+                .registerModule(new Jdk8Module())
+                .registerModule(new JavaTimeModule());
+
+        result.forEach( jsonT -> {
+            try{
+                JSONParser jsonParser = new JSONParser();
+                JSONObject jsonValue = (JSONObject) jsonParser.parse(jsonT.toString());
+
+                String destinationEmail = (String) jsonValue.remove("user_destination_id");
+                Transactions t = mapper.readValue(jsonValue.toString(), Transactions.class);
+                addNewTransactions( userId, t, destinationEmail);
+                System.out.println(t);
+            } catch(ParseException e){
+                throw new RuntimeException(e);
+            } catch (JsonMappingException e) {
+                throw new RuntimeException(e);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
