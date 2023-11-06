@@ -13,7 +13,7 @@ import java.util.Set;
 @RestController
 @CrossOrigin("*")
 @Slf4j
-@RequestMapping(path = "api/v1/transactions")
+@RequestMapping(path = "api/v1/transactions/")
 public class TransactionsController {
     private final TransactionsService transactionsService;
 

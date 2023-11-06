@@ -10,9 +10,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.json.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import utility.protection.UserProtection;
@@ -46,7 +44,7 @@ public class TransactionsService {
         for(Transactions t : sentTransactions)
         {
             int month = t.getDot().getMonthValue();
-            if(transactionByMonth.containsKey(String.valueOf(month)))
+            if(transactionByMonth.has(String.valueOf(month)))
                 transactionByMonth.put(String.valueOf(month), (float) -t.getAmount() + (float) transactionByMonth.get(String.valueOf(month)));
             else
                 transactionByMonth.put(String.valueOf(month), (float) -t.getAmount());
@@ -55,7 +53,7 @@ public class TransactionsService {
 
         for(Transactions t : receivedTransactions){
             int month = t.getDot().getMonthValue();
-            if(transactionByMonth.containsKey(String.valueOf(month)))
+            if(transactionByMonth.has(String.valueOf(month)))
                 transactionByMonth.put(String.valueOf(month), (float) t.getAmount() + (float) transactionByMonth.get(String.valueOf(month)));
             else
                 transactionByMonth.put(String.valueOf(month), (float) t.getAmount());
@@ -138,15 +136,12 @@ public class TransactionsService {
 
         result.forEach( jsonT -> {
             try{
-                JSONParser jsonParser = new JSONParser();
-                JSONObject jsonValue = (JSONObject) jsonParser.parse(jsonT.toString());
+                JSONObject jsonValue = new JSONObject(jsonT.toString());
 
                 String destinationEmail = (String) jsonValue.remove("user_destination_id");
                 Transactions t = mapper.readValue(jsonValue.toString(), Transactions.class);
                 addNewTransactions( userId, t, destinationEmail);
                 System.out.println(t);
-            } catch(ParseException e){
-                throw new RuntimeException(e);
             } catch (JsonMappingException e) {
                 throw new RuntimeException(e);
             } catch (JsonProcessingException e) {

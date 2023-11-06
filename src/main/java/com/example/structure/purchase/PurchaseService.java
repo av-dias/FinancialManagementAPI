@@ -20,9 +20,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import utility.protection.UserProtection;
 
 @Component
@@ -129,7 +127,7 @@ public class PurchaseService {
             String[] tmpDate = rowTokenizer[2].split("[ -]");
             String dayFormat = tmpDate[0] + tmpDate[1];
 
-            if(result.containsKey(dayFormat)){
+            if(result.has(dayFormat)){
                 temp = (JSONObject) result.get(dayFormat);
                 temp.put(rowTokenizer[0], rowTokenizer[1]);
             }else{
@@ -274,10 +272,9 @@ public class PurchaseService {
             //map json to purchase
             try
             {
-                JSONParser jsonParser = new JSONParser();
-                JSONObject jsonValue = (JSONObject) jsonParser.parse(jsonP.toString());
+                JSONObject jsonValue = new JSONObject(jsonP.toString());
 
-                if(jsonValue.containsKey("split")){
+                if(jsonValue.has("split")){
                     JSONObject splitValue = (JSONObject) jsonValue.get("split");
                     String email = (String) splitValue.get("userId");
                     Optional<UserClient> _userClient = userProtection.hasUser(email);
@@ -292,8 +289,6 @@ public class PurchaseService {
                 Purchase p = mapper.readValue(jsonP.toString(), Purchase.class);
                 addNewPurchase(p, userId);
                 System.out.println(p);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
             } catch (JsonMappingException e) {
                 throw new RuntimeException(e);
             } catch (JsonProcessingException e) {
